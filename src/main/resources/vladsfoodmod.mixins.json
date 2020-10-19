@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.vlad2305m.vladsfoodmod.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "BottleFillingMixin",
+    "FilledBottleMixin",
+    "FoodStoreMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

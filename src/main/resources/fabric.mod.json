@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "vladsfoodmod",
+  "version": "${version}",
+
+  "name": "Vlad's Food Mod",
+  "description": "Adds server-side food stats and cooking from (any) ingredients, overhauls eating system to be more \"realistic\"\n\nOther mods not supported",
+  "authors": [
+    "vlad2305m"
+  ],
+
+  "license": "CC0-1.0",
+  "icon": "assets/vladsfoodmod/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.vlad2305m.vladsfoodmod.VladsFoodMod"
+    ]
+  },
+  "mixins": [
+    "vladsfoodmod.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "minecraft": "1.16.x"
+  },
+
+  "suggests": {
+    "fabric": "*"
+  }
+
+}
