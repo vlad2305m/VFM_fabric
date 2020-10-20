@@ -65,6 +65,13 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
         if (this.vfm_post_read) {
             this.vfm_stomach_timer = this.vfm_gametime - this.vfm_stomach_timer;
             this.vfm_last_meal = this.vfm_gametime - this.vfm_last_meal;
+            Queue<Map.Entry<Long, Float>> vfm_intestine_new = new LinkedList<>();
+            while (this.vfm_intestine.peek() != null) {
+                vfm_intestine_new.add(new AbstractMap.SimpleImmutableEntry<>(
+                        this.vfm_gametime - this.vfm_intestine.element().getKey(),
+                        this.vfm_intestine.remove().getValue()));
+            }
+            this.vfm_intestine = vfm_intestine_new;
             this.vfm_post_read = false;
         }
         long time_passed = vfm_gametime - this.vfm_last_meal;
@@ -187,8 +194,8 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
         } // TODO eating speed hooks
         else if (this.vfm_blood <= 10.0F && player.isSprinting()) {
             player.addStatusEffect(new StatusEffectInstance(
-                    StatusEffects.SLOWNESS, 3, 1, true, false, false));
-        } //sprinting support / interruption
+                    StatusEffects.SLOWNESS, 20, 1, true, false, false));
+        } //sprinting support / neglecting
 
         info.cancel();
     }
@@ -221,18 +228,17 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
         tag.putInt("vfm_mouth_timer", this.vfm_mouth_timer);
         tag.putLong("vfm_stomach_timer", this.vfm_gametime - this.vfm_stomach_timer);
         tag.putLong("vfm_last_meal", this.vfm_gametime - this.vfm_last_meal);
-        Queue<Map.Entry<Long, Float>> vfm_intestine_backup = new LinkedList<>();
+        Queue<Map.Entry<Long, Float>> vfm_intestine_new = new LinkedList<>();
         List<Long> food_times = new ArrayList<>();
         List<Long> intestine_contents = new ArrayList<>();
-        while (this.vfm_intestine.peek() != null) { //~to do correct intestine save system
-            food_times.add(this.vfm_intestine.element().getKey());
+        while (this.vfm_intestine.peek() != null) {
+            food_times.add(this.vfm_gametime - this.vfm_intestine.element().getKey());
             intestine_contents.add((long)(this.vfm_intestine.element().getValue()*1000000.0F));
-            vfm_intestine_backup.add(this.vfm_intestine.remove());
+            vfm_intestine_new.add(this.vfm_intestine.remove());
         }
-        this.vfm_intestine = vfm_intestine_backup;
+        this.vfm_intestine = vfm_intestine_new;
         tag.putLongArray("vfm_intestine_times", food_times);
         tag.putLongArray("vfm_intestine_contents", intestine_contents);
-        this.vfm_intestine = vfm_intestine_backup;
     }
 
     @Inject(method = "isNotFull", at = @At("TAIL"), cancellable = true)
