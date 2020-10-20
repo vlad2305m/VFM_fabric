@@ -175,18 +175,19 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
         }
 
         this.foodLevel = Math.min( (int) this.vfm_stomach, 20);
-        this.foodSaturationLevel = Math.min( (int) this.vfm_blood, 20);
+        this.foodSaturationLevel = Math.max(Math.min( (int) this.vfm_blood - 20, 20), 0);
 
-        if (this.vfm_gametime % 80 <= 10) {
+        if (player.isSneaking()) {
             this.foodLevel = (int) (this.vfm_blood / 5.0f);
         } // blood % showing
 
         if (this.foodLevel < 7 && this.vfm_blood > 10.0F && player.isSprinting()) {
             this.foodLevel = vfm_random.nextInt(14) + 7;
             this.foodSaturationLevel = 0;
-        } // TO DO good speed & eating speed hooks
+        } // TODO eating speed hooks
         else if (this.vfm_blood <= 10.0F && player.isSprinting()) {
-            this.foodLevel = vfm_random.nextInt(7);
+            player.addStatusEffect(new StatusEffectInstance(
+                    StatusEffects.SLOWNESS, 3, 1, true, false, false));
         } //sprinting support / interruption
 
         info.cancel();

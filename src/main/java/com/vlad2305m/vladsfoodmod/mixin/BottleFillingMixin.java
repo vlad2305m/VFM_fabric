@@ -49,9 +49,9 @@ public class BottleFillingMixin {
                 case (59) :  colour = new int[]{16492341, 12068955, 15819071, 15655598}[player.world.random.nextInt(4)]; break;
                 case (82) :  colour = 16730050; break;
                 case (85) :  colour = 0; break;
-                default:  colour = 666;
+                default:  colour = -1;
             }
-            if (colour != 666) {
+            if (colour != -1) {
                 bottledWater.getOrCreateTag().putInt("CustomPotionColor", colour);
             }
         }
