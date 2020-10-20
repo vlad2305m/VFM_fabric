@@ -49,7 +49,7 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
     @Inject(method = "add", at = @At("HEAD"), cancellable = true)
     public void add(int foodLevelIn, float foodSaturationModifier, CallbackInfo info) {
         this.vfm_mouth += foodLevelIn;
-        this.vfm_mouth += foodSaturationModifier * foodLevelIn;
+        this.vfm_mouth += foodSaturationModifier * foodLevelIn * 2.0F;
         info.cancel();
     }
 
