@@ -3,7 +3,6 @@ package com.vlad2305m.vladsfoodmod.mixin;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.GlassBottleItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.LiteralText;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -17,7 +16,7 @@ public class BottleFillingMixin {
     private ItemStack RSetPotion(ItemStack itemStack, PlayerEntity player, ItemStack bottledWater){
         if (!player.world.isClient) {
             int i = player.world.random.nextInt(158);
-            bottledWater.setCustomName(new LiteralText(new String[]{
+            bottledWater.getOrCreateSubTag("display").putString("Name", "{\"text\":\""+new String[]{
                     "Acqua Panna", "Aqua Carpatica", "Agua Cinco Estrellas", "AdeS", "Agua Mineral Salus", "Agua Vida",
                     "Ambo Mineral Water", "Amma Kudineer", "Antipodes Water Company", "Apenta", "Apollinaris", "Aqua Pura",
                     "Aquafina", "Aquaqueen", "Aquas", "Arrowhead Water", "Ayvaz Water", "Arwa", "Badamli", "Badoit",
@@ -42,7 +41,7 @@ public class BottleFillingMixin {
                     "Sirab", "Sohat", "Souroti", "Spa", "Sparkletts", "Eau St. Justin", "Tannourine", "Tau",
                     "Tipperary Natural Mineral Water", "Topo Chico", "Trump Ice", "Tŷ Nant", "Valpre", "Verna Natural Mineral Water",
                     "VEEN", "Vittel", "Volvic", "Voss", "Water4", "Watsons Water", "Whistler Water", "Zaječická hořká", "Zephyrhills"
-            }[i]));
+            }[i]+"\",\"italic\":false}");
             int colour;
             switch (i){
                 case (27) :  colour = 4487367; break;
