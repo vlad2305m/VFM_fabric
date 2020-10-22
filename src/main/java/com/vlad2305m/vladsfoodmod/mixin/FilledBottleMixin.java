@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class FilledBottleMixin {
 
     @Inject(method = "finishUsing", at = @At(value = "HEAD"))
-    public void finishUsing(ItemStack stack, World world, LivingEntity user, CallbackInfoReturnable infoReturnable) {
+    public void finishUsing(ItemStack stack, World world, LivingEntity user, CallbackInfoReturnable<ItemStack> infoReturnable) {
         if(user instanceof PlayerEntity) {
             ((VfmFoodStore)((PlayerEntity) user).getHungerManager()).vfm_flush();
         }

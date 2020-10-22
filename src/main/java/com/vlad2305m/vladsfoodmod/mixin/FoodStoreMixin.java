@@ -188,13 +188,13 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
             this.foodLevel = (int) (this.vfm_blood / 5.0f);
         } // blood % showing
 
-        if (this.foodLevel < 7 && this.vfm_blood > 10.0F && player.isSprinting()) {
+        if (this.vfm_stomach < 7 && this.vfm_blood > 10.0F && player.isSprinting()) {
             this.foodLevel = vfm_random.nextInt(14) + 7;
             this.foodSaturationLevel = 0;
         } // TODO eating speed hooks
         else if (this.vfm_blood <= 10.0F && player.isSprinting()) {
             player.addStatusEffect(new StatusEffectInstance(
-                    StatusEffects.SLOWNESS, 20, 1, true, false, false));
+                    StatusEffects.SLOWNESS, 20, this.vfm_blood > 5 ? 1 : 2, true, false, false));
         } //sprinting support / neglecting
 
         info.cancel();
