@@ -50,6 +50,8 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
     public void add(int foodLevelIn, float foodSaturationModifier, CallbackInfo info) {
         this.vfm_mouth += foodLevelIn;
         this.vfm_mouth += foodSaturationModifier * foodLevelIn * 2.0F;
+        this.foodLevel = Math.min( (int) this.vfm_stomach, 20);
+        this.foodSaturationLevel = Math.max(Math.min( (int) this.vfm_blood - 20, 20), 0);
         info.cancel();
     }
 
