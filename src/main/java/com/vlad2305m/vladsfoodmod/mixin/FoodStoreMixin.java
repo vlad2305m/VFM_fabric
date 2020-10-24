@@ -186,18 +186,18 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
         this.foodLevel = Math.min( (int) this.vfm_stomach, 20);
         this.foodSaturationLevel = Math.max(Math.min( (int) this.vfm_blood - 20, 20), 0);
 
-        if (player.isSneaking()) {
-            this.foodLevel = (int) (this.vfm_blood / 5.0f);
-        } // blood % showing
-
-        if (this.vfm_stomach < 7 && this.vfm_blood > 10.0F && player.isSprinting()) {
-            this.foodLevel = vfm_random.nextInt(14) + 7;
+        if (this.vfm_stomach < 7 && this.vfm_blood > 10.0F) {
+            this.foodLevel = 10;
             this.foodSaturationLevel = 0;
         } // TODO eating speed hooks
         else if (this.vfm_blood <= 10.0F && player.isSprinting()) {
             player.addStatusEffect(new StatusEffectInstance(
                     StatusEffects.SLOWNESS, 20, this.vfm_blood > 5 ? 1 : 2, true, false, false));
         } //sprinting support / neglecting
+
+        if (player.isSneaking()) {
+            this.foodLevel = (int) (this.vfm_blood / 5.0f);
+        } // blood % showing
 
         info.cancel();
     }
@@ -245,7 +245,7 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
 
     @Inject(method = "isNotFull", at = @At("TAIL"), cancellable = true)
     public void isNotFull(CallbackInfoReturnable<Boolean> infoReturnable){
-        infoReturnable.setReturnValue(this.vfm_mouth <= 0.0F && this.vfm_stomach < 22.0F);
+        infoReturnable.setReturnValue(this.vfm_mouth <= 20.0F && this.vfm_stomach < 20.0F);
     }
 
     public void vfm_flush() {
