@@ -1,6 +1,8 @@
 package com.vlad2305m.vladsfoodmod.mixin;
 
+import com.vlad2305m.vladsfoodmod.ModConfig;
 import com.vlad2305m.vladsfoodmod.interfaces.VfmFoodStore;
+import me.sargunvohra.mcmods.autoconfig1.AutoConfig;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -26,6 +28,7 @@ import java.util.*;
 
 @Mixin(HungerManager.class)
 public abstract class FoodStoreMixin implements VfmFoodStore {
+    private boolean vfm_delay_enabled = AutoConfig.getConfigHolder(ModConfig.class).getConfig().moduleA.delay_system;
     private final Random vfm_random = new Random();
     private ItemStack vfm_mouth_item = null;
     private float vfm_mouth = 0;
@@ -93,7 +96,7 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
         }
 
         if (this.vfm_mouth > 0.0F) {
-            if (this.vfm_mouth_timer + this.vfm_mouth_modifier > 0){
+            if (this.vfm_mouth_timer + this.vfm_mouth_modifier > 0 && this.vfm_delay_enabled){
                 this.vfm_mouth_timer --;
             }
             else {
@@ -115,9 +118,9 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
         }
 
         if (this.vfm_stomach > 0.0F) {
-            if (stomach_timer >= 100) {
+            if (stomach_timer >= 100 || !this.vfm_delay_enabled) {
                 this.vfm_stomach_timer = vfm_gametime;
-                if (time_passed > 4000){
+                if (time_passed > 4000 || !this.vfm_delay_enabled){
                     this.vfm_intestine.offer(new AbstractMap.SimpleImmutableEntry<>(vfm_gametime, Math.min(this.vfm_stomach, 1.235F)));
                     this.vfm_stomach -= Math.min(this.vfm_stomach, 1.235F);
                 }
@@ -130,7 +133,7 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
         }
 
         if (this.vfm_intestine.peek() != null){
-            if(this.vfm_gametime - this.vfm_intestine.element().getKey() > 3000){
+            if(this.vfm_gametime - this.vfm_intestine.element().getKey() > 3000 || !this.vfm_delay_enabled){
                 this.vfm_blood += this.vfm_intestine.remove().getValue();
             }
             if (stomach_timer == 99) {
@@ -183,6 +186,8 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
                     StatusEffects.POISON, 400, 2, true, false, true));
         }
 
+        if (!this.vfm_delay_enabled && this.vfm_blood > 40.0F) { this.vfm_blood = 40.0F; }
+
         if (this.vfm_stomach > 40.0F) {
             this.vfm_stomach = 1.0F;
             player.addStatusEffect(new StatusEffectInstance(
@@ -201,7 +206,7 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
                     StatusEffects.SLOWNESS, 20, this.vfm_blood > 5 ? 1 : 2, true, false, false));
         } // sprinting support / neglecting
 
-        if (player.isSneaking()) {
+        if (player.isSneaking() || !this.vfm_delay_enabled) {
             this.foodLevel = (int) (this.vfm_blood / 5.0f);
         } // blood % showing
 

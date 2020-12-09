@@ -7,11 +7,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 
-import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "overrides", "deprecated"})
 @Environment(EnvType.CLIENT)
 public class ModMenuIntegration implements ModMenuApi {
 
