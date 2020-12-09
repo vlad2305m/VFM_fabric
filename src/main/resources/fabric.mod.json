@@ -16,7 +16,8 @@
   "entrypoints": {
     "main": [
       "com.vlad2305m.vladsfoodmod.VladsFoodMod"
-    ]
+    ],
+    "modmenu": [ "com.vlad2305m.vladsfoodmod.misc.ModMenuIntegration" ]
   },
   "mixins": [
     "vladsfoodmod.mixins.json"
@@ -30,5 +31,4 @@
   "suggests": {
     "fabric": "*"
   }
-
 }

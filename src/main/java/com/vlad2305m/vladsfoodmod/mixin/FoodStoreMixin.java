@@ -9,6 +9,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.packet.s2c.play.HealthUpdateS2CPacket;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
@@ -36,6 +38,7 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
     private long vfm_stomach_timer = 0;
     private boolean vfm_post_read = true;
     private long vfm_gametime = 0;
+    private boolean vfm_send_packet = false;
     @Shadow private int foodLevel;
     @Shadow private float foodSaturationLevel;
     @Shadow private int foodStarvationTimer;
@@ -43,6 +46,8 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
     @Shadow private int prevFoodLevel;
 
     @Shadow public void addExhaustion(float exhaustion) {  }
+    @Shadow public int getFoodLevel() { return 0; }
+    @Shadow public float getSaturationLevel() { return 0; }
 
 
 
@@ -52,6 +57,7 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
         this.vfm_mouth += foodSaturationModifier * foodLevelIn * 2.0F;
         this.foodLevel = Math.min( (int) this.vfm_stomach, 20);
         this.foodSaturationLevel = Math.max(Math.min( (int) this.vfm_blood - 20, 20), 0);
+        this.vfm_send_packet = true;
         info.cancel();
     }
 
@@ -189,15 +195,21 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
         if (this.vfm_stomach < 7 && this.vfm_blood > 10.0F) {
             this.foodLevel = 10;
             this.foodSaturationLevel = 0;
-        } // TODO eating speed hooks
+        } // TODO eating speed hooks & potions
         else if (this.vfm_blood <= 10.0F && player.isSprinting()) {
             player.addStatusEffect(new StatusEffectInstance(
                     StatusEffects.SLOWNESS, 20, this.vfm_blood > 5 ? 1 : 2, true, false, false));
-        } //sprinting support / neglecting
+        } // sprinting support / neglecting
 
         if (player.isSneaking()) {
             this.foodLevel = (int) (this.vfm_blood / 5.0f);
         } // blood % showing
+
+        if (this.vfm_send_packet && !player.world.isClient){
+            ((ServerPlayerEntity)player).networkHandler.sendPacket(
+                    new HealthUpdateS2CPacket(player.getHealth(), this.getFoodLevel(), this.getSaturationLevel()));
+            this.vfm_send_packet = false;
+        } // force sync
 
         info.cancel();
     }
