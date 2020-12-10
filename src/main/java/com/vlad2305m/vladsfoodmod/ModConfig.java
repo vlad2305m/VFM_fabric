@@ -30,14 +30,14 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
     @Config(name = "Features toggler")
     public static class ModuleA implements ConfigData {
 
+        @Comment("set this if you are using spice of fabric or alike")
+        public boolean disable_food_system = true;
+
         @ConfigEntry.Gui.PrefixText
         public boolean delay_system = false;
 
         @ConfigEntry.Gui.Tooltip(count = 2)
         private ExampleEnum anEnum = ExampleEnum.FOO;
-
-        @Comment("This tooltip was automatically applied from a Jankson @Comment")
-        private String aString = "hello";
 
         @ConfigEntry.Gui.PrefixText
         public boolean water_branding = false;
