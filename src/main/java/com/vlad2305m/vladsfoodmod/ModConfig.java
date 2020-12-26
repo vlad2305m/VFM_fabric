@@ -6,6 +6,7 @@ import me.sargunvohra.mcmods.autoconfig1.annotation.ConfigEntry;
 import me.sargunvohra.mcmods.autoconfig1.serializer.PartitioningSerializer;
 import me.sargunvohra.mcmods.autoconfig1.shadowed.blue.endless.jankson.Comment;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,8 +31,8 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
     @Config(name = "Features toggler")
     public static class ModuleA implements ConfigData {
 
-        @Comment("set this if you are using spice of fabric or alike")
-        public boolean disable_food_system = true;
+        @Comment("change this if you are using spice of fabric or alike (disables food bar behavior changes)")
+        public boolean disable_food_system = false;
 
         @ConfigEntry.Gui.PrefixText
         public boolean delay_system = false;
@@ -43,7 +44,7 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
         public boolean water_branding = false;
     }
 
-    @Config(name = "module_b")
+    @Config(name = "foods")
     private static class ModuleB implements ConfigData {
 
         @ConfigEntry.BoundedDiscrete(min = -1000, max = 2000)
@@ -52,11 +53,8 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
         @ConfigEntry.BoundedDiscrete(min = -1000, max = 2000)
         private Long longSlider = 500L;
 
-        @ConfigEntry.Gui.TransitiveObject
-        private PairOfIntPairs anObject = new PairOfIntPairs(new PairOfInts(), new PairOfInts(3, 4));
-
         @ConfigEntry.Gui.Excluded
-        private List<PairOfInts> aList = Arrays.asList(new PairOfInts(), new PairOfInts(3, 4));
+        private NutritionData[] aList = new NutritionData[] {new NutritionData("apple", 0), new NutritionData("3", 4)};
     }
 
     @SuppressWarnings("FieldCanBeLocal")
@@ -74,22 +72,27 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
         }
     }
 
-    private static class PairOfIntPairs {
+    public static class NutritionData {
 
-        @ConfigEntry.Gui.CollapsibleObject()
-        PairOfInts first;
+        public String id;
+        public float vitaminA;
 
-        @ConfigEntry.Gui.CollapsibleObject()
-        PairOfInts second;
 
-        PairOfIntPairs() {
-            this(new PairOfInts(), new PairOfInts());
+        NutritionData(String id, float vitaminA) {
+            this.id = id;
+            this.vitaminA = vitaminA;
         }
-
-        PairOfIntPairs(PairOfInts first, PairOfInts second) {
-            this.first = first;
-            this.second = second;
+        NutritionData() {
+            this.id = "invalid_id";
+            this.vitaminA = 0;
         }
+    }
+
+    public NutritionData searchById(String id){
+        for(NutritionData i : this.moduleB.aList){
+            if(i.id.equals(id)){return i;}
+        }
+        return new NutritionData();
     }
 
 }
