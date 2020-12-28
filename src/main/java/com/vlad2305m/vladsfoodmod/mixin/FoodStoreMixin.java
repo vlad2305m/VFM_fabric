@@ -1,6 +1,7 @@
 package com.vlad2305m.vladsfoodmod.mixin;
 
 import com.vlad2305m.vladsfoodmod.ModConfig;
+import com.vlad2305m.vladsfoodmod.NutrientStore;
 import com.vlad2305m.vladsfoodmod.interfaces.VfmFoodStore;
 import me.sargunvohra.mcmods.autoconfig1.AutoConfig;
 import net.minecraft.entity.damage.DamageSource;
@@ -28,8 +29,6 @@ import java.util.*;
 
 @Mixin(HungerManager.class)
 public abstract class FoodStoreMixin implements VfmFoodStore {
-    private final boolean vfm_delay_enabled = AutoConfig.getConfigHolder(ModConfig.class).getConfig().moduleA.delay_system;
-    private final boolean vfm_mixin_enabled = !AutoConfig.getConfigHolder(ModConfig.class).getConfig().moduleA.disable_food_system;
     private final Random vfm_random = new Random();
     private ItemStack vfm_mouth_item = null;
     private float vfm_mouth = 0;
@@ -43,6 +42,7 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
     private boolean vfm_post_read = true;
     private long vfm_gametime = 0;
     private boolean vfm_send_packet = false;
+    private final NutrientStore vfm_essential_nutrients = new NutrientStore().subtractDaily(-10F);
     @Shadow private int foodLevel;
     @Shadow private float foodSaturationLevel;
     @Shadow private int foodStarvationTimer;
@@ -57,11 +57,15 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
 
     @Inject(method = "add", at = @At("HEAD"), cancellable = true)
     public void add(int foodLevelIn, float foodSaturationModifier, CallbackInfo info) {
-        if(this.vfm_delay_enabled) {
+        if(!AutoConfig.getConfigHolder(ModConfig.class).getConfig().moduleA.disable_food_system){
+        if(AutoConfig.getConfigHolder(ModConfig.class).getConfig().moduleA.delay_system){
             this.vfm_mouth += foodLevelIn;
             this.vfm_mouth += foodSaturationModifier * foodLevelIn * 2.0F;
             this.foodLevel = Math.min((int) this.vfm_stomach, 20);
             this.foodSaturationLevel = Math.max(Math.min((int) this.vfm_blood - 20, 20), 0);
+        } else {
+            this.vfm_blood += foodLevelIn + foodSaturationModifier * foodLevelIn * 2.0F;
+        }
             this.vfm_send_packet = true;
             info.cancel();
         }
@@ -70,13 +74,16 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
     @Inject(method = "eat", at = @At("HEAD"))
     public void eat(Item item, ItemStack stack, CallbackInfo info) {
         this.vfm_mouth_item = stack;
+        this.vfm_essential_nutrients.add(AutoConfig.getConfigHolder(ModConfig.class).getConfig().moduleB
+                .nutrientStoreMap.get(stack.getTranslationKey()));
     }
 
     @Inject(method = "update", at = @At("HEAD"), cancellable = true)
     public void update(PlayerEntity player, CallbackInfo info) {
         Difficulty difficulty = player.world.getDifficulty();
         this.vfm_gametime = player.world.getTime();
-        if (this.vfm_mixin_enabled) {
+        if (!AutoConfig.getConfigHolder(ModConfig.class).getConfig().moduleA.disable_food_system) {
+            boolean vfm_delay_enabled = AutoConfig.getConfigHolder(ModConfig.class).getConfig().moduleA.delay_system;
             if (this.vfm_post_read) {
                 this.vfm_stomach_timer = this.vfm_gametime - this.vfm_stomach_timer;
                 this.vfm_last_meal = this.vfm_gametime - this.vfm_last_meal;
@@ -97,10 +104,11 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
                 if (this.vfm_blood > 0.0F) {
                     this.vfm_blood = Math.max(this.vfm_blood - 1.0F, 0.0F);
                 }
+                this.vfm_send_packet = true;
             }
 
             if (this.vfm_mouth > 0.0F) {
-                if (this.vfm_mouth_timer + this.vfm_mouth_modifier > 0 && this.vfm_delay_enabled) {
+                if (this.vfm_mouth_timer + this.vfm_mouth_modifier > 0 && vfm_delay_enabled) {
                     this.vfm_mouth_timer--;
                 } else {
                     if (time_passed > 4000) {
@@ -121,9 +129,9 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
             }
 
             if (this.vfm_stomach > 0.0F) {
-                if (stomach_timer >= 100 || !this.vfm_delay_enabled) {
+                if (stomach_timer >= 100 || !vfm_delay_enabled) {
                     this.vfm_stomach_timer = vfm_gametime;
-                    if (time_passed > 4000 || !this.vfm_delay_enabled) {
+                    if (time_passed > 4000 || !vfm_delay_enabled) {
                         this.vfm_intestine.offer(new AbstractMap.SimpleImmutableEntry<>(vfm_gametime, Math.min(this.vfm_stomach, 1.235F)));
                         this.vfm_stomach -= Math.min(this.vfm_stomach, 1.235F);
                     } else if (time_passed > 800) {
@@ -135,7 +143,7 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
             }
 
             if (this.vfm_intestine.peek() != null) {
-                if (this.vfm_gametime - this.vfm_intestine.element().getKey() > 3000 || !this.vfm_delay_enabled) {
+                if (this.vfm_gametime - this.vfm_intestine.element().getKey() > 3000 || !vfm_delay_enabled) {
                     this.vfm_blood += this.vfm_intestine.remove().getValue();
                 }
                 if (stomach_timer == 99) {
@@ -185,7 +193,7 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
                         StatusEffects.POISON, 400, 2, true, false, true));
             }
 
-            if (!this.vfm_delay_enabled && this.vfm_blood > 40.0F) {
+            if (!vfm_delay_enabled && this.vfm_blood > 40.0F) {
                 this.vfm_blood = 40.0F;
             }
 
@@ -207,8 +215,9 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
                         StatusEffects.SLOWNESS, 20, this.vfm_blood > 5 ? 1 : 2, true, false, false));
             } // sprinting support / neglecting
 
-            if (player.isSneaking() || !this.vfm_delay_enabled) {
+            if (player.isSneaking() || !vfm_delay_enabled) {
                 this.foodLevel = (int) (this.vfm_blood / 5.0f);
+                System.out.println(this.vfm_essential_nutrients.getVitaminPercentage().toString());
             } // blood % showing
 
             if (this.vfm_send_packet && !player.world.isClient) {
@@ -264,7 +273,7 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
 
     @Inject(method = "isNotFull", at = @At("TAIL"), cancellable = true)
     public void isNotFull(CallbackInfoReturnable<Boolean> infoReturnable){
-        infoReturnable.setReturnValue(this.vfm_mouth <= 20.0F && this.vfm_stomach < 20.0F);
+        if (!AutoConfig.getConfigHolder(ModConfig.class).getConfig().moduleA.disable_food_system) infoReturnable.setReturnValue(this.vfm_mouth <= 20.0F && this.vfm_stomach < 20.0F);
     }
 
     public void vfm_flush() {
