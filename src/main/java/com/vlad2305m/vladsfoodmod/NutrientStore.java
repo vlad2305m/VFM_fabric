@@ -1,5 +1,6 @@
 package com.vlad2305m.vladsfoodmod;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -157,5 +158,18 @@ public class NutrientStore {
         map.put(vitamins.B12, this.vitaminB12 / 2.4e-6);
         map.put(vitamins.C, this.vitaminC / 90e-3);
         return map;
+    }
+
+    public vitamins[] deficient(double n){
+        Map<vitamins, Double> map = this.getVitaminPercentage();
+        ArrayList<vitamins> list = new ArrayList<>();
+        for (Map.Entry<vitamins, Double> i : map.entrySet()){
+            if (i.getValue() <= n) list.add(i.getKey());
+        }
+        return (vitamins[]) list.toArray();
+    }
+
+    public boolean isSuffering(double n){
+        return this.deficient(n) != null;
     }
 }

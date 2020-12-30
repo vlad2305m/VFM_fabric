@@ -105,6 +105,8 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
                     this.vfm_blood = Math.max(this.vfm_blood - 1.0F, 0.0F);
                 }
                 this.vfm_send_packet = true;
+                if (vfm_essential_nutrients.isSuffering(0)) player.dealDamage(player, player);
+                if (vfm_essential_nutrients.isSuffering(-5)) player.kill();
             }
 
             if (this.vfm_mouth > 0.0F) {
