@@ -42,7 +42,7 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
     private boolean vfm_post_read = true;
     private long vfm_gametime = 0;
     private boolean vfm_send_packet = false;
-    private final NutrientStore vfm_essential_nutrients = new NutrientStore().subtractDaily(-10F);
+    public final NutrientStore vfm_essential_nutrients = new NutrientStore().subtractDaily(-10F);
     @Shadow private int foodLevel;
     @Shadow private float foodSaturationLevel;
     @Shadow private int foodStarvationTimer;
@@ -283,5 +283,7 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
         this.vfm_mouth -= f;
         this.vfm_stomach += f;
     }
+
+    public Map<NutrientStore.vitamins, Double> getVitaminPercentage(){ return vfm_essential_nutrients.getVitaminPercentage(); }
 
 }

@@ -37,6 +37,7 @@ public class BottleFillingMixin {
             }
             bottledWater.getOrCreateTag().putString("vfm_biome", Objects.requireNonNull(player.world.getRegistryManager().get(Registry.BIOME_KEY).getId(player.world.getBiome(player.getBlockPos()))).toString());
         }
+        player.wakeUp();
         return bottledWater;
     }
 }

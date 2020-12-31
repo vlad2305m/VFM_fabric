@@ -6,7 +6,8 @@
   "mixins": [
     "BottleFillingMixin",
     "FilledBottleMixin",
-    "FoodStoreMixin"
+    "FoodStoreMixin",
+    "WakeUpMixin"
   ],
   "client": [
   ],

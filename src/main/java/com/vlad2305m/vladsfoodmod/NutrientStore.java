@@ -22,7 +22,7 @@ public class NutrientStore {
     public float vitaminB12;
     public float vitaminC;
 
-    enum vitamins{ A, D, E, K, B1, B2, B3, B5, B6, B9, B12, C }
+    public enum vitamins{ A, D, E, K, B1, B2, B3, B5, B6, B9, B12, C }
 
     public NutrientStore(float CH, float protein, float fat, float water,
             float A, float D, float E, float K, float B1, float B2, float B3,
@@ -160,16 +160,16 @@ public class NutrientStore {
         return map;
     }
 
-    public vitamins[] deficient(double n){
+    public ArrayList<vitamins> deficient(double n){
         Map<vitamins, Double> map = this.getVitaminPercentage();
         ArrayList<vitamins> list = new ArrayList<>();
         for (Map.Entry<vitamins, Double> i : map.entrySet()){
             if (i.getValue() <= n) list.add(i.getKey());
         }
-        return (vitamins[]) list.toArray();
+        return list;
     }
 
     public boolean isSuffering(double n){
-        return this.deficient(n) != null;
+        return !this.deficient(n).isEmpty();
     }
 }
