@@ -219,7 +219,6 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
 
             if (player.isSneaking() || !vfm_delay_enabled) {
                 this.foodLevel = (int) (this.vfm_blood / 5.0f);
-                System.out.println(this.vfm_essential_nutrients.getVitaminPercentage().toString());
             } // blood % showing
 
             if (this.vfm_send_packet && !player.world.isClient) {
@@ -284,6 +283,6 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
         this.vfm_stomach += f;
     }
 
-    public Map<NutrientStore.vitamins, Double> getVitaminPercentage(){ return vfm_essential_nutrients.getVitaminPercentage(); }
+    public List<Map.Entry<NutrientStore.vitamins, Double>> getVitaminPercentage(){ return vfm_essential_nutrients.getVitaminPercentage(); }
 
 }

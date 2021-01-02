@@ -1,8 +1,6 @@
 package com.vlad2305m.vladsfoodmod;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class NutrientStore {
     public float carbohydrates;
@@ -143,27 +141,27 @@ public class NutrientStore {
         return this;
     }
 
-    public Map<vitamins, Double> getVitaminPercentage(){
-        Map<vitamins, Double> map = new HashMap<>();
-        map.put(vitamins.A, this.vitaminA / 900e-6);
-        map.put(vitamins.D, this.vitaminD / 250e-6);
-        map.put(vitamins.E, this.vitaminE / 15e-3);
-        map.put(vitamins.K, this.vitaminK / 120e-6);
-        map.put(vitamins.B1, this.vitaminB1 / 1.5e-6);
-        map.put(vitamins.B2, this.vitaminB2 / 1.3e-3);
-        map.put(vitamins.B3, this.vitaminB3 / 16e-3);
-        map.put(vitamins.B5, this.vitaminB5 / 5e-3);
-        map.put(vitamins.B6, this.vitaminB6 / 1.3e-6);
-        map.put(vitamins.B9, this.vitaminB9 / 400e-6);
-        map.put(vitamins.B12, this.vitaminB12 / 2.4e-6);
-        map.put(vitamins.C, this.vitaminC / 90e-3);
+    public List<Map.Entry<vitamins, Double>> getVitaminPercentage(){
+        List<Map.Entry<vitamins, Double>> map = new ArrayList<>();
+        map.add(new AbstractMap.SimpleImmutableEntry<>(vitamins.A, this.vitaminA / 900e-6));
+        map.add(new AbstractMap.SimpleImmutableEntry<>(vitamins.D, this.vitaminD / 250e-6));
+        map.add(new AbstractMap.SimpleImmutableEntry<>(vitamins.E, this.vitaminE / 15e-3));
+        map.add(new AbstractMap.SimpleImmutableEntry<>(vitamins.K, this.vitaminK / 120e-6));
+        map.add(new AbstractMap.SimpleImmutableEntry<>(vitamins.B1, this.vitaminB1 / 1.5e-6));
+        map.add(new AbstractMap.SimpleImmutableEntry<>(vitamins.B2, this.vitaminB2 / 1.3e-3));
+        map.add(new AbstractMap.SimpleImmutableEntry<>(vitamins.B3, this.vitaminB3 / 16e-3));
+        map.add(new AbstractMap.SimpleImmutableEntry<>(vitamins.B5, this.vitaminB5 / 5e-3));
+        map.add(new AbstractMap.SimpleImmutableEntry<>(vitamins.B6, this.vitaminB6 / 1.3e-6));
+        map.add(new AbstractMap.SimpleImmutableEntry<>(vitamins.B9, this.vitaminB9 / 400e-6));
+        map.add(new AbstractMap.SimpleImmutableEntry<>(vitamins.B12, this.vitaminB12 / 2.4e-6));
+        map.add(new AbstractMap.SimpleImmutableEntry<>(vitamins.C, this.vitaminC / 90e-3));
         return map;
     }
 
     public ArrayList<vitamins> deficient(double n){
-        Map<vitamins, Double> map = this.getVitaminPercentage();
+        List<Map.Entry<vitamins, Double>> map = this.getVitaminPercentage();
         ArrayList<vitamins> list = new ArrayList<>();
-        for (Map.Entry<vitamins, Double> i : map.entrySet()){
+        for (Map.Entry<vitamins, Double> i : map){
             if (i.getValue() <= n) list.add(i.getKey());
         }
         return list;
