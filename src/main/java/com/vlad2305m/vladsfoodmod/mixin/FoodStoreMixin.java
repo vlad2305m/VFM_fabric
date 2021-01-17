@@ -42,7 +42,8 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
     private boolean vfm_post_read = true;
     private long vfm_gametime = 0;
     private boolean vfm_send_packet = false;
-    public final NutrientStore vfm_essential_nutrients = new NutrientStore().subtractDaily(-10F);
+    private final NutrientStore vfm_essential_nutrients = new NutrientStore().subtractDaily(-10F);
+    private long vfm_nutrient_timer = 0;
     @Shadow private int foodLevel;
     @Shadow private float foodSaturationLevel;
     @Shadow private int foodStarvationTimer;
@@ -82,10 +83,16 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
     public void update(PlayerEntity player, CallbackInfo info) {
         Difficulty difficulty = player.world.getDifficulty();
         this.vfm_gametime = player.world.getTime();
+        if (AutoConfig.getConfigHolder(ModConfig.class).getConfig().moduleA.subtract_each_24h
+                && this.vfm_gametime - this.vfm_nutrient_timer  > 24000) {
+            this.vfm_essential_nutrients.subtractDaily(1);
+            this.vfm_nutrient_timer += 24000;
+        }
         if (!AutoConfig.getConfigHolder(ModConfig.class).getConfig().moduleA.disable_food_system) {
             boolean vfm_delay_enabled = AutoConfig.getConfigHolder(ModConfig.class).getConfig().moduleA.delay_system;
             if (this.vfm_post_read) {
                 this.vfm_stomach_timer = this.vfm_gametime - this.vfm_stomach_timer;
+                this.vfm_nutrient_timer = this.vfm_gametime - this.vfm_nutrient_timer;
                 this.vfm_last_meal = this.vfm_gametime - this.vfm_last_meal;
                 Queue<Map.Entry<Long, Float>> vfm_intestine_new = new LinkedList<>();
                 while (this.vfm_intestine.peek() != null) {
@@ -168,14 +175,16 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
                     this.addExhaustion(f);
                     this.foodStarvationTimer = 0;
                 }
-            } else if (flag && this.vfm_blood >= 20.0F && player.canFoodHeal()) {
+            }
+            else if (flag && this.vfm_blood >= 20.0F && player.canFoodHeal()) {
                 ++this.foodStarvationTimer;
                 if (this.foodStarvationTimer >= 80) {
                     player.heal(1.0F);
                     this.addExhaustion(6.0F);
                     this.foodStarvationTimer = 0;
                 }
-            } else if (this.vfm_blood <= 0) {
+            }
+            else if (this.vfm_blood <= 0) {
                 ++this.foodStarvationTimer;
                 if (this.foodStarvationTimer >= 80) {
                     if (player.getHealth() > 10.0F || difficulty == Difficulty.HARD ||
@@ -185,7 +194,8 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
 
                     this.foodStarvationTimer = 0;
                 }
-            } else {
+            }
+            else {
                 this.foodStarvationTimer = 0;
             }
 
@@ -245,10 +255,12 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
             long[] intestine_contents = tag.getLongArray("vfm_intestine_contents");
             int n = food_times.length;
             for (int i = 0; i < n; i++) {
-                this.vfm_intestine.offer(new AbstractMap.SimpleImmutableEntry<>(food_times[i], ((float)intestine_contents[i])/1000000.0F));
+                this.vfm_intestine.offer(new AbstractMap.SimpleImmutableEntry<>
+                        (food_times[i], ((float) intestine_contents[i]) / 1000000.0F));
             }
+            this.vfm_nutrient_timer = tag.getLong("vfm_nutrient_timer");
+            this.vfm_essential_nutrients.fromTag(tag, "_blood");
         }
-
     }
 
     @Inject(method = "toTag", at = @At("TAIL"))
@@ -270,6 +282,8 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
         this.vfm_intestine = vfm_intestine_new;
         tag.putLongArray("vfm_intestine_times", food_times);
         tag.putLongArray("vfm_intestine_contents", intestine_contents);
+        tag.putLong("vfm_nutrient_timer", this.vfm_gametime - this.vfm_nutrient_timer);
+        this.vfm_essential_nutrients.toTag(tag, "_blood");
     }
 
     @Inject(method = "isNotFull", at = @At("TAIL"), cancellable = true)
@@ -283,6 +297,6 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
         this.vfm_stomach += f;
     }
 
-    public List<Map.Entry<NutrientStore.vitamins, Double>> getVitaminPercentage(){ return vfm_essential_nutrients.getVitaminPercentage(); }
+    public NutrientStore getNutrientStore(){ return vfm_essential_nutrients; }
 
 }

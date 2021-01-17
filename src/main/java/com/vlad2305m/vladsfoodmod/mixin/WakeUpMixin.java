@@ -1,8 +1,10 @@
 package com.vlad2305m.vladsfoodmod.mixin;
 
 import com.mojang.authlib.GameProfile;
+import com.vlad2305m.vladsfoodmod.ModConfig;
 import com.vlad2305m.vladsfoodmod.NutrientStore;
 import com.vlad2305m.vladsfoodmod.interfaces.VfmFoodStore;
+import me.sargunvohra.mcmods.autoconfig1.AutoConfig;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -15,7 +17,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -37,10 +38,15 @@ public abstract class WakeUpMixin extends PlayerEntity {
 
     public void showNutrientInfo(){
         if (!this.world.isClient){
-            List<Map.Entry<NutrientStore.vitamins, Double>> map = ((VfmFoodStore)hungerManager).getVitaminPercentage();
+
+            if (AutoConfig.getConfigHolder(ModConfig.class).getConfig().moduleA.subtract_on_wakeup)
+                ((VfmFoodStore)this.getHungerManager()).getNutrientStore().subtractDaily(1);
+
+            List<Map.Entry<NutrientStore.nutrients, Double>> map =
+                    ((VfmFoodStore)hungerManager).getNutrientStore().getNutrientPercentage();
 
             StringBuilder levels = new StringBuilder();
-            for (Map.Entry<NutrientStore.vitamins, Double> i : map) {
+            for (Map.Entry<NutrientStore.nutrients, Double> i : map) {
                 int n = (int)floor(i.getValue() * 5);
                 boolean neg = false;
                 if (n < 0) { n = -n * 4; neg = true; }
@@ -48,10 +54,11 @@ public abstract class WakeUpMixin extends PlayerEntity {
                 levels
                         .append(i.getKey())
                         .append(":§8")
-                        .append(StringUtils.repeat("_", 4 - i.getKey().toString().length()))
-                        .append("§f§l[§a")
+                        .append(StringUtils.repeat("_", 11 - i.getKey().toString().length()))
+                        .append("§f§l[")
+                        .append(neg ? "§c" : "§a")
                         .append(StringUtils.repeat("|", n))
-                        .append(neg ? "§c" :"§7")
+                        .append("§7")
                         .append(StringUtils.repeat("|", 100 - n))
                         .append("§f]§r\n");
             }
@@ -59,9 +66,8 @@ public abstract class WakeUpMixin extends PlayerEntity {
             sendMessage(Text.of(
                     "Your essential nutrient levels:\n" +
                             levels.toString() +
-                            "END"
+                            "Capacity: green — 20 days, red — 5 days"
                     ), false);
-
         }
     }
 

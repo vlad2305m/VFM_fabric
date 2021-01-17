@@ -7,5 +7,5 @@ import java.util.Map;
 
 public interface VfmFoodStore {
     void vfm_flush();
-    List<Map.Entry<NutrientStore.vitamins, Double>> getVitaminPercentage();
+    NutrientStore getNutrientStore();
 }

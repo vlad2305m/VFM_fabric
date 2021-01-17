@@ -36,8 +36,13 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
         @ConfigEntry.Gui.PrefixText
         public boolean delay_system = false;
 
-        @ConfigEntry.Gui.Tooltip(count = 2)
-        private ExampleEnum anEnum = ExampleEnum.FOO;
+        @Comment("Choose the subtraction schedule you want to use")
+        public boolean subtract_each_24h = true;
+
+        public boolean subtract_on_wakeup = false;
+
+        //@ConfigEntry.Gui.Tooltip(count = 2)
+        //private ExampleEnum anEnum = ExampleEnum.FOO;
 
         @ConfigEntry.Gui.PrefixText
         public boolean water_branding = false;
@@ -54,9 +59,9 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
 
         @Comment("one and only food database for this mod (in grams)")
         public Map<String, NutrientStore> nutrientStoreMap = new HashMap<String, NutrientStore>() {{
-            put(Items.APPLE.getTranslationKey(), new NutrientStore().subtractDaily(-1));
-            put(Items.BAKED_POTATO.getTranslationKey(), new NutrientStore(21.05F, 2.49F, 0.13F, 74.55F, 7E-6F, 0F, 0.04E-6F, 2E-6F, 0F, 0F, 0F, 0F, 0.31E-6F, 28E-6F, 0F, 0F ));
-            put(Items.BEEF.getTranslationKey(), new NutrientStore(0F, 20.85F, 7F, 71.72F, 4E-6F, 0.2E-6F, 0.17E-6F, 0.5E-6F, 0F, 0F, 0F, 0F, 0.383E-6F, 0F, 2.23E-6F, 0F ));
+            put(Items.APPLE.getTranslationKey(), new NutrientStore());
+            put(Items.BAKED_POTATO.getTranslationKey(), new NutrientStore());
+            put(Items.BEEF.getTranslationKey(), new NutrientStore());
             put(Items.BEETROOT.getTranslationKey(), new NutrientStore());
             put(Items.BEETROOT_SOUP.getTranslationKey(), new NutrientStore());
             put(Items.BREAD.getTranslationKey(), new NutrientStore());
@@ -95,7 +100,7 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
             put(Items.SUSPICIOUS_STEW.getTranslationKey(), new NutrientStore());
             put(Items.SWEET_BERRIES.getTranslationKey(), new NutrientStore());
             put(Items.TROPICAL_FISH.getTranslationKey(), new NutrientStore());
-            put(Items.POTION.getTranslationKey(), new NutrientStore());
+            //put(Items.POTION.getTranslationKey(), new NutrientStore());
         }};
 
         //@ConfigEntry.Gui.Excluded
