@@ -51,8 +51,8 @@ public class NutrientStore {
     }*/
 
     public NutrientStore(float n, float CH, float protein, float fat, float water,
-                         float A, float D, float E, float K, float B6, float B12, float C,
-                         float KK, float Ca, float P, float Mg, float Cu, float Fe, float Se) {
+                         float A, float D, float E, float vitK, float B6, float B12, float C,
+                         float K, float Ca, float P, float Mg, float Cu, float Fe, float Se) {
         this.carbohydrates = CH * n;
         this.protein = protein * n;
         this.fat = fat * n;
@@ -60,11 +60,11 @@ public class NutrientStore {
         this.vitaminA = A * n;
         this.vitaminD = D * n;
         this.vitaminE = E * n;
-        this.vitaminK = K * n;
+        this.vitaminK = vitK * n;
         this.vitaminB6 = B6 * n;
         this.vitaminB12 = B12 * n;
         this.vitaminC = C * n;
-        this.mineralK = KK * n;
+        this.mineralK = K * n;
         this.mineralCa = Ca * n;
         this.mineralP = P * n;
         this.mineralMg = Mg * n;
