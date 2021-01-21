@@ -27,7 +27,7 @@ public class NutrientStore {
     public enum nutrients { vitaminA, vitaminD, vitaminE, vitaminK, vitaminB6, vitaminB12,
         vitaminC, mineralK, mineralCa, mineralP, mineralMg, mineralCu, mineralFe, mineralSe }
 
-    public NutrientStore(float CH, float protein, float fat, float water,
+    /*public NutrientStore(float CH, float protein, float fat, float water,
             float A, float D, float E, float K, float B6, float B12, float C,
             float KK, float Ca, float P, float Mg, float Cu, float Fe, float Se) {
         this.carbohydrates = CH;
@@ -48,7 +48,7 @@ public class NutrientStore {
         this.mineralCu = Cu;
         this.mineralFe = Fe;
         this.mineralSe = Se;
-    }
+    }*/
 
     public NutrientStore(float n, float CH, float protein, float fat, float water,
                          float A, float D, float E, float K, float B6, float B12, float C,
@@ -73,7 +73,7 @@ public class NutrientStore {
         this.mineralSe = Se * n;
     }
 
-    public NutrientStore(float CH, float protein, float fat, float water) {
+    /*public NutrientStore(float CH, float protein, float fat, float water) {
         this.carbohydrates = CH;
         this.protein = protein;
         this.fat = fat;
@@ -115,7 +115,7 @@ public class NutrientStore {
         this.mineralCu = Cu;
         this.mineralFe = Fe;
         this.mineralSe = Se;
-    }
+    }*/
 
     public NutrientStore() {
         this.carbohydrates = 0;
@@ -203,9 +203,9 @@ public class NutrientStore {
 
     public void ejectExcess(){
         //this.carbohydrates = (float)Math.min(this.carbohydrates,  * 20);
-        this.protein = (float)Math.min(this.protein, 56 * 20);
+        this.protein = Math.min(this.protein, 56 * 20);
         //this.fat = (float)Math.min(this.fat,  * 20);
-        this.water = (float)Math.min(this.water, 2000 * 20);
+        this.water = Math.min(this.water, 2000 * 20);
         this.vitaminA = (float)Math.min(this.vitaminA, 900e-6 * 20);
         this.vitaminD = (float)Math.min(this.vitaminD, 250e-6 * 20);
         this.vitaminE = (float)Math.min(this.vitaminE, 15e-3 * 20);
@@ -214,13 +214,13 @@ public class NutrientStore {
         this.vitaminB12 = (float)Math.min(this.vitaminB12, 2.4e-6 * 20);
         this.vitaminC = (float)Math.min(this.vitaminC, 90e-3 * 20);
         this.mineralK = (float)Math.min(this.mineralK, 4.7 * 20);
-        this.mineralCa = (float)Math.min(this.mineralCa, 20);
+        this.mineralCa = Math.min(this.mineralCa, 20);
         this.mineralP = (float)Math.min(this.mineralP, 0.7 * 20);
         this.mineralMg = (float)Math.min(this.mineralMg, 0.4 * 20);
         this.mineralCu = (float)Math.min(this.mineralCu, 0.9e-3 * 20);
         this.mineralFe = (float)Math.min(this.mineralFe, 8e-3 * 20);
         this.mineralSe = (float)Math.min(this.mineralSe, 55e-6 * 20);
-    };
+    }
 
     public ArrayList<nutrients> deficient(double n){
         List<Map.Entry<nutrients, Double>> map = this.getNutrientPercentage();

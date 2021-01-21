@@ -41,21 +41,12 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
 
         public boolean subtract_on_wakeup = false;
 
-        //@ConfigEntry.Gui.Tooltip(count = 2)
-        //private ExampleEnum anEnum = ExampleEnum.FOO;
-
         @ConfigEntry.Gui.PrefixText
         public boolean water_branding = false;
     }
 
     @Config(name = "foods")
     public static class ModuleB implements ConfigData {
-
-        /*@ConfigEntry.BoundedDiscrete(min = -1000, max = 2000)
-        private int intSlider = 500;
-
-        @ConfigEntry.BoundedDiscrete(min = -1000, max = 2000)
-        private Long longSlider = 500L;*/
 
         @Comment("one and only food database for this mod (in grams) [delete this file to reset]")
         public Map<String, NutrientStore> nutrientStoreMap = new HashMap<String, NutrientStore>() {{
@@ -102,48 +93,5 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
             put(Items.TROPICAL_FISH.getTranslationKey(), new NutrientStore());
             //put(Items.POTION.getTranslationKey(), new NutrientStore());
         }};
-
-        //@ConfigEntry.Gui.Excluded
-        //private NutritionData[] aList = new NutritionData[] {new NutritionData("apple", 0), new NutritionData("3", 4)};
-
     }
-
-    @SuppressWarnings("FieldCanBeLocal")
-    private static class PairOfInts {
-        private int foo;
-        private int bar;
-
-        PairOfInts() {
-            this(1, 2);
-        }
-
-        PairOfInts(int foo, int bar) {
-            this.foo = foo;
-            this.bar = bar;
-        }
-    }
-
-    public static class NutritionData {
-
-        public String id;
-        public float vitaminA;
-
-
-        NutritionData(String id, float vitaminA) {
-            this.id = id;
-            this.vitaminA = vitaminA;
-        }
-        NutritionData() {
-            this.id = "invalid_id";
-            this.vitaminA = 0;
-        }
-    }
-
-    /*public NutritionData searchById(String id){
-        for(NutritionData i : this.moduleB.aList){
-            if(i.id.equals(id)){return i;}
-        }
-        return new NutritionData();
-    }*/
-
 }
