@@ -3,6 +3,11 @@ plugins {
 	id 'maven-publish'
 }
 
+repositories {
+	jcenter()
+	mavenLocal()
+}
+
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
@@ -16,9 +21,13 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	modCompile "cloth-config:ClothConfig:${project.cloth_config_version}"
-	modCompile "me.sargunvohra.mcmods:auto-config:${project.auto_config_version}"
-	modCompile "io.github.prospector.modmenu:ModMenu:${project.mod_menu_version}"
+	modApi("me.shedaniel.cloth:config-2:4.8.3") {
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+	modApi("me.sargunvohra.mcmods:autoconfig1u:${project.auto_config_version}") {
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+	modCompile "io.github.prospector:modmenu:${project.mod_menu_version}"
 
 	include "cloth-config:ClothConfig:${project.cloth_config_version}"
 	include "me.sargunvohra.mcmods:auto-config:${project.auto_config_version}"
