@@ -13,12 +13,7 @@ public class NutrientStore {
     public float vitaminD;
     public float vitaminE;
     public float vitaminK;
-    public float vitaminB1;
-    public float vitaminB2;
-    public float vitaminB3;
-    public float vitaminB5;
     public float vitaminB6;
-    public float vitaminB9;
     public float vitaminB12;
     public float vitaminC;
     public float mineralK;
@@ -29,12 +24,11 @@ public class NutrientStore {
     public float mineralFe;
     public float mineralSe;
 
-    public enum nutrients { vitaminA, vitaminD, vitaminE, vitaminK, vitaminB1, vitaminB2, vitaminB3, vitaminB5, vitaminB6,
-        vitaminB9, vitaminB12, vitaminC, mineralK, mineralCa, mineralP, mineralMg, mineralCu, mineralFe, mineralSe }
+    public enum nutrients { vitaminA, vitaminD, vitaminE, vitaminK, vitaminB6, vitaminB12,
+        vitaminC, mineralK, mineralCa, mineralP, mineralMg, mineralCu, mineralFe, mineralSe }
 
-    public NutrientStore(float CH, float protein, float fat, float water,
-            float A, float D, float E, float K, float B1, float B2, float B3,
-            float B5, float B6, float B9, float B12, float C,
+    /*public NutrientStore(float CH, float protein, float fat, float water,
+            float A, float D, float E, float K, float B6, float B12, float C,
             float KK, float Ca, float P, float Mg, float Cu, float Fe, float Se) {
         this.carbohydrates = CH;
         this.protein = protein;
@@ -44,12 +38,7 @@ public class NutrientStore {
         this.vitaminD = D;
         this.vitaminE = E;
         this.vitaminK = K;
-        this.vitaminB1 = B1;
-        this.vitaminB2 = B2;
-        this.vitaminB3 = B3;
-        this.vitaminB5 = B5;
         this.vitaminB6 = B6;
-        this.vitaminB9 = B9;
         this.vitaminB12 = B12;
         this.vitaminC = C;
         this.mineralK = KK;
@@ -59,12 +48,11 @@ public class NutrientStore {
         this.mineralCu = Cu;
         this.mineralFe = Fe;
         this.mineralSe = Se;
-    }
+    }*/
 
     public NutrientStore(float n, float CH, float protein, float fat, float water,
-                         float A, float D, float E, float K, float B1, float B2, float B3,
-                         float B5, float B6, float B9, float B12, float C,
-                         float KK, float Ca, float P, float Mg, float Cu, float Fe, float Se) {
+                         float A, float D, float E, float vitK, float B6, float B12, float C,
+                         float K, float Ca, float P, float Mg, float Cu, float Fe, float Se) {
         this.carbohydrates = CH * n;
         this.protein = protein * n;
         this.fat = fat * n;
@@ -72,16 +60,11 @@ public class NutrientStore {
         this.vitaminA = A * n;
         this.vitaminD = D * n;
         this.vitaminE = E * n;
-        this.vitaminK = K * n;
-        this.vitaminB1 = B1 * n;
-        this.vitaminB2 = B2 * n;
-        this.vitaminB3 = B3 * n;
-        this.vitaminB5 = B5 * n;
+        this.vitaminK = vitK * n;
         this.vitaminB6 = B6 * n;
-        this.vitaminB9 = B9 * n;
         this.vitaminB12 = B12 * n;
         this.vitaminC = C * n;
-        this.mineralK = KK * n;
+        this.mineralK = K * n;
         this.mineralCa = Ca * n;
         this.mineralP = P * n;
         this.mineralMg = Mg * n;
@@ -90,7 +73,7 @@ public class NutrientStore {
         this.mineralSe = Se * n;
     }
 
-    public NutrientStore(float CH, float protein, float fat, float water) {
+    /*public NutrientStore(float CH, float protein, float fat, float water) {
         this.carbohydrates = CH;
         this.protein = protein;
         this.fat = fat;
@@ -99,12 +82,7 @@ public class NutrientStore {
         this.vitaminD = 0;
         this.vitaminE = 0;
         this.vitaminK = 0;
-        this.vitaminB1 = 0;
-        this.vitaminB2 = 0;
-        this.vitaminB3 = 0;
-        this.vitaminB5 = 0;
         this.vitaminB6 = 0;
-        this.vitaminB9 = 0;
         this.vitaminB12 = 0;
         this.vitaminC = 0;
         this.mineralK = 0;
@@ -117,8 +95,7 @@ public class NutrientStore {
     }
 
     public NutrientStore(
-            float A, float D, float E, float K, float B1, float B2, float B3,
-            float B5, float B6, float B9, float B12, float C,
+            float A, float D, float E, float K, float B6, float B12, float C,
             float KK, float Ca, float P, float Mg, float Cu, float Fe, float Se) {
         this.carbohydrates = 0;
         this.protein = 0;
@@ -128,12 +105,7 @@ public class NutrientStore {
         this.vitaminD = D;
         this.vitaminE = E;
         this.vitaminK = K;
-        this.vitaminB1 = B1;
-        this.vitaminB2 = B2;
-        this.vitaminB3 = B3;
-        this.vitaminB5 = B5;
         this.vitaminB6 = B6;
-        this.vitaminB9 = B9;
         this.vitaminB12 = B12;
         this.vitaminC = C;
         this.mineralK = KK;
@@ -143,7 +115,7 @@ public class NutrientStore {
         this.mineralCu = Cu;
         this.mineralFe = Fe;
         this.mineralSe = Se;
-    }
+    }*/
 
     public NutrientStore() {
         this.carbohydrates = 0;
@@ -154,12 +126,7 @@ public class NutrientStore {
         this.vitaminD = 0;
         this.vitaminE = 0;
         this.vitaminK = 0;
-        this.vitaminB1 = 0;
-        this.vitaminB2 = 0;
-        this.vitaminB3 = 0;
-        this.vitaminB5 = 0;
         this.vitaminB6 = 0;
-        this.vitaminB9 = 0;
         this.vitaminB12 = 0;
         this.vitaminC = 0;
         this.mineralK = 0;
@@ -180,12 +147,7 @@ public class NutrientStore {
         this.vitaminD += nutrientStore.vitaminD;
         this.vitaminE += nutrientStore.vitaminE;
         this.vitaminK += nutrientStore.vitaminK;
-        this.vitaminB1 += nutrientStore.vitaminB1;
-        this.vitaminB2 += nutrientStore.vitaminB2;
-        this.vitaminB3 += nutrientStore.vitaminB3;
-        this.vitaminB5 += nutrientStore.vitaminB5;
         this.vitaminB6 += nutrientStore.vitaminB6;
-        this.vitaminB9 += nutrientStore.vitaminB9;
         this.vitaminB12 += nutrientStore.vitaminB12;
         this.vitaminC += nutrientStore.vitaminC;
         this.mineralK += nutrientStore.mineralK;
@@ -206,12 +168,7 @@ public class NutrientStore {
         this.vitaminD -= 250e-6 * f;
         this.vitaminE -= 15e-3 * f;
         this.vitaminK -= 120e-6 * f;
-        this.vitaminB1 -= 1.5e-6 * f;
-        this.vitaminB2 -= 1.3e-3 * f;
-        this.vitaminB3 -= 16e-3 * f;
-        this.vitaminB5 -= 5e-3 * f;
         this.vitaminB6 -= 1.3e-6 * f;
-        this.vitaminB9 -= 400e-6 * f;
         this.vitaminB12 -= 2.4e-6 * f;
         this.vitaminC -= 90e-3 * f;
         this.mineralK -= 4.7 * f;
@@ -231,12 +188,7 @@ public class NutrientStore {
         map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.vitaminD, this.vitaminD / 250e-6));
         map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.vitaminE, this.vitaminE / 15e-3));
         map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.vitaminK, this.vitaminK / 120e-6));
-        map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.vitaminB1, this.vitaminB1 / 1.5e-6));
-        map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.vitaminB2, this.vitaminB2 / 1.3e-3));
-        map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.vitaminB3, this.vitaminB3 / 16e-3));
-        map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.vitaminB5, this.vitaminB5 / 5e-3));
         map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.vitaminB6, this.vitaminB6 / 1.3e-6));
-        map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.vitaminB9, this.vitaminB9 / 400e-6));
         map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.vitaminB12, this.vitaminB12 / 2.4e-6));
         map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.vitaminC, this.vitaminC / 90e-3));
         map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.mineralK, this.mineralK / 4.7));
@@ -251,29 +203,24 @@ public class NutrientStore {
 
     public void ejectExcess(){
         //this.carbohydrates = (float)Math.min(this.carbohydrates,  * 20);
-        this.protein = (float)Math.min(this.protein, 56 * 20);
+        this.protein = Math.min(this.protein, 56 * 20);
         //this.fat = (float)Math.min(this.fat,  * 20);
-        this.water = (float)Math.min(this.water, 2000 * 20);
+        this.water = Math.min(this.water, 2000 * 20);
         this.vitaminA = (float)Math.min(this.vitaminA, 900e-6 * 20);
         this.vitaminD = (float)Math.min(this.vitaminD, 250e-6 * 20);
         this.vitaminE = (float)Math.min(this.vitaminE, 15e-3 * 20);
         this.vitaminK = (float)Math.min(this.vitaminK, 120e-6 * 20);
-        this.vitaminB1 = (float)Math.min(this.vitaminB1, 1.5e-6 * 20);
-        this.vitaminB2 = (float)Math.min(this.vitaminB2, 1.3e-3 * 20);
-        this.vitaminB3 = (float)Math.min(this.vitaminB3, 16e-3 * 20);
-        this.vitaminB5 = (float)Math.min(this.vitaminB5, 5e-3 * 20);
         this.vitaminB6 = (float)Math.min(this.vitaminB6, 1.3e-6 * 20);
-        this.vitaminB9 = (float)Math.min(this.vitaminB9, 400e-6 * 20);
         this.vitaminB12 = (float)Math.min(this.vitaminB12, 2.4e-6 * 20);
         this.vitaminC = (float)Math.min(this.vitaminC, 90e-3 * 20);
         this.mineralK = (float)Math.min(this.mineralK, 4.7 * 20);
-        this.mineralCa = (float)Math.min(this.mineralCa, 20);
+        this.mineralCa = Math.min(this.mineralCa, 20);
         this.mineralP = (float)Math.min(this.mineralP, 0.7 * 20);
         this.mineralMg = (float)Math.min(this.mineralMg, 0.4 * 20);
         this.mineralCu = (float)Math.min(this.mineralCu, 0.9e-3 * 20);
         this.mineralFe = (float)Math.min(this.mineralFe, 8e-3 * 20);
         this.mineralSe = (float)Math.min(this.mineralSe, 55e-6 * 20);
-    };
+    }
 
     public ArrayList<nutrients> deficient(double n){
         List<Map.Entry<nutrients, Double>> map = this.getNutrientPercentage();
@@ -293,12 +240,7 @@ public class NutrientStore {
         tag.putFloat("vfm_store_vitaminD"+suffix, this.vitaminD);
         tag.putFloat("vfm_store_vitaminE"+suffix, this.vitaminE);
         tag.putFloat("vfm_store_vitaminK"+suffix, this.vitaminK);
-        tag.putFloat("vfm_store_vitaminB1"+suffix, this.vitaminB1);
-        tag.putFloat("vfm_store_vitaminB2"+suffix, this.vitaminB2);
-        tag.putFloat("vfm_store_vitaminB3"+suffix, this.vitaminB3);
-        tag.putFloat("vfm_store_vitaminB5"+suffix, this.vitaminB5);
         tag.putFloat("vfm_store_vitaminB6"+suffix, this.vitaminB6);
-        tag.putFloat("vfm_store_vitaminB9"+suffix, this.vitaminB9);
         tag.putFloat("vfm_store_vitaminB12"+suffix, this.vitaminB12);
         tag.putFloat("vfm_store_vitaminC"+suffix, this.vitaminC);
         tag.putFloat("vfm_store_mineralK"+suffix, this.mineralK);
@@ -315,12 +257,7 @@ public class NutrientStore {
         this.vitaminD = tag.getFloat("vfm_store_vitaminD"+suffix);
         this.vitaminE = tag.getFloat("vfm_store_vitaminE"+suffix);
         this.vitaminK = tag.getFloat("vfm_store_vitaminK"+suffix);
-        this.vitaminB1 = tag.getFloat("vfm_store_vitaminB1"+suffix);
-        this.vitaminB2 = tag.getFloat("vfm_store_vitaminB2"+suffix);
-        this.vitaminB3 = tag.getFloat("vfm_store_vitaminB3"+suffix);
-        this.vitaminB5 = tag.getFloat("vfm_store_vitaminB5"+suffix);
         this.vitaminB6 = tag.getFloat("vfm_store_vitaminB6"+suffix);
-        this.vitaminB9 = tag.getFloat("vfm_store_vitaminB9"+suffix);
         this.vitaminB12 = tag.getFloat("vfm_store_vitaminB12"+suffix);
         this.vitaminC = tag.getFloat("vfm_store_vitaminC"+suffix);
         this.mineralK = tag.getFloat("vfm_store_mineralK"+suffix);
