@@ -1,10 +1,10 @@
 package com.vlad2305m.vladsfoodmod;
 
-import me.sargunvohra.mcmods.autoconfig1.ConfigData;
-import me.sargunvohra.mcmods.autoconfig1.annotation.Config;
-import me.sargunvohra.mcmods.autoconfig1.annotation.ConfigEntry;
-import me.sargunvohra.mcmods.autoconfig1.serializer.PartitioningSerializer;
-import me.sargunvohra.mcmods.autoconfig1.shadowed.blue.endless.jankson.Comment;
+import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
+import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
+import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry;
+import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer;
+import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.Comment;
 import net.minecraft.item.Items;
 
 import java.util.*;

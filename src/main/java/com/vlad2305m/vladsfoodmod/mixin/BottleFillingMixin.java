@@ -2,7 +2,7 @@ package com.vlad2305m.vladsfoodmod.mixin;
 
 import com.vlad2305m.vladsfoodmod.ModConfig;
 import com.vlad2305m.vladsfoodmod.data.WaterBrands;
-import me.sargunvohra.mcmods.autoconfig1.AutoConfig;
+import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.GlassBottleItem;
 import net.minecraft.item.ItemStack;

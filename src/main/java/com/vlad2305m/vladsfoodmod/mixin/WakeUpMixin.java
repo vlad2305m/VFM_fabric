@@ -4,7 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.vlad2305m.vladsfoodmod.ModConfig;
 import com.vlad2305m.vladsfoodmod.NutrientStore;
 import com.vlad2305m.vladsfoodmod.interfaces.VfmFoodStore;
-import me.sargunvohra.mcmods.autoconfig1.AutoConfig;
+import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;

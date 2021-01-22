@@ -1,9 +1,9 @@
 package com.vlad2305m.vladsfoodmod;
 
-import me.sargunvohra.mcmods.autoconfig1.AutoConfig;
-import me.sargunvohra.mcmods.autoconfig1.ConfigHolder;
-import me.sargunvohra.mcmods.autoconfig1.serializer.JanksonConfigSerializer;
-import me.sargunvohra.mcmods.autoconfig1.serializer.PartitioningSerializer;
+import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
+import me.sargunvohra.mcmods.autoconfig1u.ConfigHolder;
+import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
+import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 

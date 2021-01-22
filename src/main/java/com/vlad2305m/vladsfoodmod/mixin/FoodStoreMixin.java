@@ -3,7 +3,7 @@ package com.vlad2305m.vladsfoodmod.mixin;
 import com.vlad2305m.vladsfoodmod.ModConfig;
 import com.vlad2305m.vladsfoodmod.NutrientStore;
 import com.vlad2305m.vladsfoodmod.interfaces.VfmFoodStore;
-import me.sargunvohra.mcmods.autoconfig1.AutoConfig;
+import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
