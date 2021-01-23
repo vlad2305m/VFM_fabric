@@ -53,6 +53,7 @@ public class NutrientStore {
     public NutrientStore(float n, float CH, float protein, float fat, float water,
                          float A, float D, float E, float vitK, float B6, float B12, float C,
                          float K, float Ca, float P, float Mg, float Cu, float Fe, float Se) {
+        n = 10 * n;
         this.carbohydrates = CH * n;
         this.protein = protein * n;
         this.fat = fat * n;

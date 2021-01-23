@@ -83,13 +83,13 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
             put(Items.POTATO.getTranslationKey(), new NutrientStore(1f,17.49f,2.05f,0.09f,79.25f,0e-6f,0e-6f,0.01e-3f,2e-6f,0.298e-3f,0e-6f,19.7e-3f,425e-3f,12e-3f,57e-3f,23e-3f,0.11e-3f,0.81e-3f,0.4e-6f));
             put(Items.PUFFERFISH.getTranslationKey(), new NutrientStore());
             put(Items.PUMPKIN_PIE.getTranslationKey(), new NutrientStore(3f,34.83f,3.9f,9.75f,50.39f,448e-6f,0.1e-6f,0.76e-3f,13.2e-6f,0.063e-3f,0.35e-6f,0e-3f,167e-3f,64e-3f,81e-3f,14e-3f,0.148e-3f,0.9e-3f,5.4e-6f));
-            put(Items.RABBIT.getTranslationKey(), new NutrientStore());
-            put(Items.RABBIT_STEW.getTranslationKey(), new NutrientStore());
-            put(Items.ROTTEN_FLESH.getTranslationKey(), new NutrientStore());
-            put(Items.SALMON.getTranslationKey(), new NutrientStore());
+            put(Items.RABBIT.getTranslationKey(), new NutrientStore(1f,0f,21.79f,2.32f,74.51f, 0e-6f,0e-6f,0e-3f,0e-6f,0e-3f,0e-6f,0e-3f,378e-3f,12e-3f,226e-3f,29e-3f,0e-3f,3.2e-3f,9.4e-6f));
+            put(Items.RABBIT_STEW.getTranslationKey(), new NutrientStore(4f,4.44f,6.97f,1.81f,85.27f,50e-6f,0e-6f,0.15e-3f,4.3e-6f,0.121e-3f,1.35e-6f,2.4e-3f,162e-3f,14e-3f,64e-3f,10e-3f,0.079e-3f,0.71e-3f,9.1e-6f));
+            put(Items.ROTTEN_FLESH.getTranslationKey(), new NutrientStore().subtractDaily(-0.33f));// ;P
+            put(Items.SALMON.getTranslationKey(), new NutrientStore(1f,0f,20.5f,4.4f,75.52f,35e-6f,10.9e-6f,0.4e-3f,0.4e-6f,0.611e-3f,4.15e-6f,0e-3f,366e-3f,7e-3f,216e-3f,27e-3f,0.063e-3f,0.38e-3f,31.4e-6f));
             put(Items.SPIDER_EYE.getTranslationKey(), new NutrientStore());
-            put(Items.SUSPICIOUS_STEW.getTranslationKey(), new NutrientStore());
-            put(Items.SWEET_BERRIES.getTranslationKey(), new NutrientStore());
+            put(Items.SUSPICIOUS_STEW.getTranslationKey(), this.get(Items.MUSHROOM_STEW.getTranslationKey()));
+            put(Items.SWEET_BERRIES.getTranslationKey(), new NutrientStore(1f,11.97f,0.46f,0.13f,87.32f,3e-6f,0e-6f,1.32e-3f,5e-6f,0.057e-3f,0e-6f,14e-3f,80e-3f,8e-3f,11e-3f,6e-3f,0.056e-3f,0.23e-3f,0.1e-6f));
             put(Items.TROPICAL_FISH.getTranslationKey(), new NutrientStore());
             //put(Items.POTION.getTranslationKey(), new NutrientStore());
         }};
