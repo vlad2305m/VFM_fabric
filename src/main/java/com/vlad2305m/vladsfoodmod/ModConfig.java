@@ -39,7 +39,7 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
 
         public boolean water_branding = false;
 
-        public float generic_nutrient_data_multiplier_on_create_database = 10;
+        public double generic_nutrient_data_multiplier = 10;
     }
 
     @Config(name = "foods")
@@ -91,7 +91,7 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
             put(Items.POTION.getTranslationKey(), new NutrientStore((NutrientStore store) -> store.water = 100));
         }};
 
-        @Comment("report if false after you ate something")
-        public boolean exists = false;
+        public boolean disable_muliplier = false;
+
     }
 }

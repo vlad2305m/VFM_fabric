@@ -11,6 +11,8 @@ import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.PotionItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.packet.s2c.play.HealthUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -75,15 +77,9 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
     @Inject(method = "eat", at = @At("HEAD"))
     public void eat(Item item, ItemStack stack, CallbackInfo info) {
         this.vfm_mouth_item = stack;
-        if(!AutoConfig.getConfigHolder(ModConfig.class).getConfig().foodData.exists) {
-            double multiplier = AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.generic_nutrient_data_multiplier_on_create_database;
-            AutoConfig.getConfigHolder(ModConfig.class).getConfig().foodData.nutrientStoreMap.forEach((String key, NutrientStore val) ->
-                    val.multiply(multiplier));
-            AutoConfig.getConfigHolder(ModConfig.class).getConfig().foodData.exists = true;
-        }
-        this.vfm_essential_nutrients.add(AutoConfig.getConfigHolder(ModConfig.class).getConfig().foodData
-                .nutrientStoreMap.get(stack.getTranslationKey()));
-        System.out.println(stack.getTranslationKey());
+        NutrientStore stackValue = AutoConfig.getConfigHolder(ModConfig.class).getConfig().foodData.nutrientStoreMap.get(item.getTranslationKey());
+        if (stackValue == null && item instanceof PotionItem) stackValue = AutoConfig.getConfigHolder(ModConfig.class).getConfig().foodData.nutrientStoreMap.get(Items.POTION.getTranslationKey());
+        if (stackValue != null) this.vfm_essential_nutrients.add(stackValue);
     }
 
     @Inject(method = "update", at = @At("HEAD"), cancellable = true)
@@ -92,6 +88,11 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
         this.vfm_gametime = player.world.getTime();
 
         if (!AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.disable_nutrient_system){
+            if (!AutoConfig.getConfigHolder(ModConfig.class).getConfig().foodData.disable_muliplier) {
+                double m = AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.generic_nutrient_data_multiplier;
+                AutoConfig.getConfigHolder(ModConfig.class).getConfig().foodData.nutrientStoreMap.forEach((String s, NutrientStore n)->n.multiply(m));
+                AutoConfig.getConfigHolder(ModConfig.class).getConfig().foodData.disable_muliplier = true;
+            } // apply multiplier once
             if (AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.subtract_each_24h
                     && this.vfm_gametime - this.vfm_nutrient_timer  > 24000) {
                 this.vfm_essential_nutrients.subtractDaily(1);

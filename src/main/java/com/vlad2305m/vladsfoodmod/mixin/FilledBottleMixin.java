@@ -12,12 +12,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PotionItem.class)
-public class FilledBottleMixin {
+public abstract class FilledBottleMixin {
 
     @Inject(method = "finishUsing", at = @At(value = "HEAD"))
     public void finishUsing(ItemStack stack, World world, LivingEntity user, CallbackInfoReturnable<ItemStack> infoReturnable) {
-        if(user instanceof PlayerEntity) {
-            ((VfmFoodStore)((PlayerEntity) user).getHungerManager()).vfm_flush();
+        if (user instanceof PlayerEntity) {
+            ((VfmFoodStore) ((PlayerEntity) user).getHungerManager()).vfm_flush();
+            ((PlayerEntity) user).getHungerManager().eat(stack.getItem(), stack);
         }
     }
 }
