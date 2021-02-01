@@ -26,5 +26,3 @@ public class ModMenuIntegration implements ModMenuApi {
     }
 
 }
-
-

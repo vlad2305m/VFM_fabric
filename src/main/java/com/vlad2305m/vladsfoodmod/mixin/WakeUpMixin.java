@@ -17,8 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.lang.Math.*;
 
@@ -37,18 +36,21 @@ public abstract class WakeUpMixin extends PlayerEntity {
     }
 
     public void showNutrientInfo(){
-        if (!this.world.isClient){
+        if (!this.world.isClient && !AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.disable_nutrient_system){
 
-            if (AutoConfig.getConfigHolder(ModConfig.class).getConfig().moduleA.subtract_on_wakeup)
+            if (AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.subtract_on_wakeup)
                 ((VfmFoodStore)this.getHungerManager()).getNutrientStore().subtractDaily(1);
 
-            List<Map.Entry<NutrientStore.nutrients, Double>> map =
+            Map<NutrientStore.nutrients, Double> map =
                     ((VfmFoodStore)hungerManager).getNutrientStore().getNutrientPercentage();
 
+            Map.Entry<NutrientStore.nutrients, Double> def = new AbstractMap.SimpleImmutableEntry<>(null, 100.0);
+
             StringBuilder levels = new StringBuilder();
-            for (Map.Entry<NutrientStore.nutrients, Double> i : map) {
+            for (Map.Entry<NutrientStore.nutrients, Double> i : map.entrySet()) {
                 int n = (int)floor(i.getValue() * 5);
                 boolean neg = false;
+                if (n < 80) { def = def.getValue() > i.getValue() ? i : def; }
                 if (n < 0) { n = -n * 4; neg = true; }
                 n = min(n, 100);
                 levels
@@ -63,12 +65,37 @@ public abstract class WakeUpMixin extends PlayerEntity {
                         .append("§f]§r\n");
             }
 
+
+
             sendMessage(Text.of(
                     "Your essential nutrient levels:\n" +
                             levels.toString() +
-                            "Capacity: green — 20 days, red — 5 days"
+                            "Capacity: green — 20 days, red — 5 days" +
+                            (def.getValue() < 16 ?
+                            "\n\nYou are low on " +
+                            def.getKey().toString() +
+                            "\nTop 5 sources: " +
+                            find_5_best(def.getKey()): "")
                     ), false);
         }
     }
+
+    private String find_5_best(NutrientStore.nutrients n) {
+        List<Map.Entry<String, Double>> best = new LinkedList<>();
+
+        Map<String, NutrientStore> list = AutoConfig.getConfigHolder(ModConfig.class).getConfig().foodData.nutrientStoreMap;
+
+        int i = 0;
+        for (Map.Entry<String, NutrientStore> m : list.entrySet()) {
+            if (i < 4){ best.add(new AbstractMap.SimpleImmutableEntry<>(m.getKey(), m.getValue().getNutrientPercentage().get(n))); i++; continue;}
+            best.set(5, new AbstractMap.SimpleImmutableEntry<>(m.getKey(), m.getValue().getNutrientPercentage().get(n)));
+            best.sort(Map.Entry.comparingByValue());
+        }
+
+        return best.get(0).getKey() + ", " + best.get(1).getKey() + ", " + best.get(2).getKey() + ", " + best.get(3).getKey() + ", " + best.get(4).getKey() + ".";
+
+    }
+
+
 
 }

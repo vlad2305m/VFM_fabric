@@ -58,8 +58,8 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
 
     @Inject(method = "add", at = @At("HEAD"), cancellable = true)
     public void add(int foodLevelIn, float foodSaturationModifier, CallbackInfo info) {
-        if(!AutoConfig.getConfigHolder(ModConfig.class).getConfig().moduleA.disable_food_system){
-        if(AutoConfig.getConfigHolder(ModConfig.class).getConfig().moduleA.delay_system){
+        if(!AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.disable_food_system){
+        if(AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.delay_system){
             this.vfm_mouth += foodLevelIn;
             this.vfm_mouth += foodSaturationModifier * foodLevelIn * 2.0F;
             this.foodLevel = Math.min((int) this.vfm_stomach, 20);
@@ -75,24 +75,39 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
     @Inject(method = "eat", at = @At("HEAD"))
     public void eat(Item item, ItemStack stack, CallbackInfo info) {
         this.vfm_mouth_item = stack;
-        this.vfm_essential_nutrients.add(AutoConfig.getConfigHolder(ModConfig.class).getConfig().moduleB
+        if(!AutoConfig.getConfigHolder(ModConfig.class).getConfig().foodData.exists) {
+            double multiplier = AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.generic_nutrient_data_multiplier_on_create_database;
+            AutoConfig.getConfigHolder(ModConfig.class).getConfig().foodData.nutrientStoreMap.forEach((String key, NutrientStore val) ->
+                    val.multiply(multiplier));
+            AutoConfig.getConfigHolder(ModConfig.class).getConfig().foodData.exists = true;
+        }
+        this.vfm_essential_nutrients.add(AutoConfig.getConfigHolder(ModConfig.class).getConfig().foodData
                 .nutrientStoreMap.get(stack.getTranslationKey()));
+        System.out.println(stack.getTranslationKey());
     }
 
     @Inject(method = "update", at = @At("HEAD"), cancellable = true)
     public void update(PlayerEntity player, CallbackInfo info) {
-        Difficulty difficulty = player.world.getDifficulty();
+
         this.vfm_gametime = player.world.getTime();
-        if (AutoConfig.getConfigHolder(ModConfig.class).getConfig().moduleA.subtract_each_24h
-                && this.vfm_gametime - this.vfm_nutrient_timer  > 24000) {
-            this.vfm_essential_nutrients.subtractDaily(1);
-            this.vfm_nutrient_timer += 24000;
+
+        if (!AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.disable_nutrient_system){
+            if (AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.subtract_each_24h
+                    && this.vfm_gametime - this.vfm_nutrient_timer  > 24000) {
+                this.vfm_essential_nutrients.subtractDaily(1);
+                this.vfm_nutrient_timer += 24000;
+                if (this.vfm_post_read) {this.vfm_nutrient_timer = this.vfm_gametime - this.vfm_nutrient_timer;}
+            }
+            if (this.exhaustion > 4.0F) {
+                if (vfm_essential_nutrients.isSuffering(0)) player.dealDamage(player, player);
+                if (vfm_essential_nutrients.isSuffering(-5)) player.kill();
+            }
         }
-        if (!AutoConfig.getConfigHolder(ModConfig.class).getConfig().moduleA.disable_food_system) {
-            boolean vfm_delay_enabled = AutoConfig.getConfigHolder(ModConfig.class).getConfig().moduleA.delay_system;
+
+        if (!AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.disable_food_system) {
+            boolean vfm_delay_enabled = AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.delay_system;
             if (this.vfm_post_read) {
                 this.vfm_stomach_timer = this.vfm_gametime - this.vfm_stomach_timer;
-                this.vfm_nutrient_timer = this.vfm_gametime - this.vfm_nutrient_timer;
                 this.vfm_last_meal = this.vfm_gametime - this.vfm_last_meal;
                 Queue<Map.Entry<Long, Float>> vfm_intestine_new = new LinkedList<>();
                 while (this.vfm_intestine.peek() != null) {
@@ -103,17 +118,17 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
                 this.vfm_intestine = vfm_intestine_new;
                 this.vfm_post_read = false;
             }
+
             long time_passed = vfm_gametime - this.vfm_last_meal;
             long stomach_timer = vfm_gametime - this.vfm_stomach_timer;
             this.prevFoodLevel = this.foodLevel;
+
             if (this.exhaustion > 4.0F) {
                 this.exhaustion -= 4.0F;
                 if (this.vfm_blood > 0.0F) {
                     this.vfm_blood = Math.max(this.vfm_blood - 1.0F, 0.0F);
                 }
                 this.vfm_send_packet = true;
-                if (vfm_essential_nutrients.isSuffering(0)) player.dealDamage(player, player);
-                if (vfm_essential_nutrients.isSuffering(-5)) player.kill();
             }
 
             if (this.vfm_mouth > 0.0F) {
@@ -166,6 +181,7 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
                 }
             }
 
+
             boolean flag = player.world.getGameRules().getBoolean(GameRules.NATURAL_REGENERATION);
             if (flag && this.vfm_blood > 50.0F && player.canFoodHeal()) {
                 ++this.foodStarvationTimer;
@@ -187,8 +203,8 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
             else if (this.vfm_blood <= 0) {
                 ++this.foodStarvationTimer;
                 if (this.foodStarvationTimer >= 80) {
-                    if (player.getHealth() > 10.0F || difficulty == Difficulty.HARD ||
-                            player.getHealth() > 1.0F && difficulty == Difficulty.NORMAL) {
+                    if (player.getHealth() > 10.0F || player.world.getDifficulty() == Difficulty.HARD ||
+                            player.getHealth() > 1.0F && player.world.getDifficulty() == Difficulty.NORMAL) {
                         player.damage(DamageSource.STARVE, 1.0F);
                     }
 
@@ -196,29 +212,34 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
                 }
             }
             else {
-                this.foodStarvationTimer = 0;
-            }
+                    this.foodStarvationTimer = 0;
+                }
 
-            if (this.vfm_blood > 100.0F) {
-                this.vfm_blood = 100.0F;
-                player.addStatusEffect(new StatusEffectInstance(
-                        StatusEffects.POISON, 400, 2, true, false, true));
-            }
 
-            if (!vfm_delay_enabled && this.vfm_blood > 40.0F) {
+            if (vfm_delay_enabled) {
+
+                if (this.vfm_blood > 100.0F) {
+                    this.vfm_blood = 100.0F;
+                    player.addStatusEffect(new StatusEffectInstance(
+                            StatusEffects.POISON, 400, 2, true, false, true));
+                }
+
+                if (this.vfm_stomach > 40.0F) {
+                    this.vfm_stomach = 1.0F;
+                    player.addStatusEffect(new StatusEffectInstance(
+                            StatusEffects.NAUSEA, 200, 20, true, false, true));
+                }
+
+                this.foodLevel = Math.min((int) this.vfm_stomach, 20);
+                this.foodSaturationLevel = Math.max(Math.min((int) this.vfm_blood - 20, 20), 0);
+
+
+            } // limit capacity
+            else if (this.vfm_blood > 100.0F) {
                 this.vfm_blood = 40.0F;
             }
 
-            if (this.vfm_stomach > 40.0F) {
-                this.vfm_stomach = 1.0F;
-                player.addStatusEffect(new StatusEffectInstance(
-                        StatusEffects.NAUSEA, 200, 20, true, false, true));
-            }
-
-            this.foodLevel = Math.min((int) this.vfm_stomach, 20);
-            this.foodSaturationLevel = Math.max(Math.min((int) this.vfm_blood - 20, 20), 0);
-
-            if (this.vfm_stomach < 7 && this.vfm_blood > 10.0F) {
+            if (this.foodLevel < 7 && this.vfm_blood > 10.0F) {
                 this.foodLevel = 10;
                 this.foodSaturationLevel = 0;
             } // TODO eating speed hooks & potions
@@ -288,7 +309,7 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
 
     @Inject(method = "isNotFull", at = @At("TAIL"), cancellable = true)
     public void isNotFull(CallbackInfoReturnable<Boolean> infoReturnable){
-        if (!AutoConfig.getConfigHolder(ModConfig.class).getConfig().moduleA.disable_food_system) infoReturnable.setReturnValue(this.vfm_mouth <= 20.0F && this.vfm_stomach < 20.0F);
+        if (!AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.disable_food_system) infoReturnable.setReturnValue(this.vfm_mouth <= 20.0F && this.vfm_stomach < 20.0F);
     }
 
     public void vfm_flush() {

@@ -3,6 +3,7 @@ package com.vlad2305m.vladsfoodmod;
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class NutrientStore {
     public float carbohydrates;
@@ -50,10 +51,14 @@ public class NutrientStore {
         this.mineralSe = Se;
     }*/
 
+    public NutrientStore(Consumer<NutrientStore> consumer){
+        new NutrientStore();
+        consumer.accept(this);
+    }
+
     public NutrientStore(float n, float CH, float protein, float fat, float water,
                          float A, float D, float E, float vitK, float B6, float B12, float C,
                          float K, float Ca, float P, float Mg, float Cu, float Fe, float Se) {
-        n = 10 * n;
         this.carbohydrates = CH * n;
         this.protein = protein * n;
         this.fat = fat * n;
@@ -160,6 +165,27 @@ public class NutrientStore {
         this.mineralSe += nutrientStore.mineralSe;
     }
 
+    public void multiply(double n) {
+        this.carbohydrates *= n;
+        this.protein *= n;
+        this.fat *= n;
+        this.water *= n;
+        this.vitaminA *= n;
+        this.vitaminD *= n;
+        this.vitaminE *= n;
+        this.vitaminK *= n;
+        this.vitaminB6 *= n;
+        this.vitaminB12 *= n;
+        this.vitaminC *= n;
+        this.mineralK *= n;
+        this.mineralCa *= n;
+        this.mineralP *= n;
+        this.mineralMg *= n;
+        this.mineralCu *= n;
+        this.mineralFe *= n;
+        this.mineralSe *= n;
+    }
+
     public NutrientStore subtractDaily(float f) {
         //this.carbohydrates -=  * f;
         this.protein -= 56 * f;
@@ -182,23 +208,23 @@ public class NutrientStore {
         return this;
     }
 
-    public List<Map.Entry<nutrients, Double>> getNutrientPercentage(){
+    public Map<nutrients, Double> getNutrientPercentage(){
         ejectExcess();
-        List<Map.Entry<nutrients, Double>> map = new ArrayList<>();
-        map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.vitaminA, this.vitaminA / 900e-6));
-        map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.vitaminD, this.vitaminD / 250e-6));
-        map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.vitaminE, this.vitaminE / 15e-3));
-        map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.vitaminK, this.vitaminK / 120e-6));
-        map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.vitaminB6, this.vitaminB6 / 1.3e-6));
-        map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.vitaminB12, this.vitaminB12 / 2.4e-6));
-        map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.vitaminC, this.vitaminC / 90e-3));
-        map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.mineralK, this.mineralK / 4.7));
-        map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.mineralCa, (double)this.mineralCa));
-        map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.mineralP, this.mineralP / 0.7));
-        map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.mineralMg, this.mineralMg / 0.4));
-        map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.mineralCu, this.mineralCu / 0.9e-3));
-        map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.mineralFe, this.mineralFe / 8e-3));
-        map.add(new AbstractMap.SimpleImmutableEntry<>(nutrients.mineralSe, this.mineralSe / 55e-6));
+        Map<nutrients, Double> map = new HashMap<>();
+        map.put(nutrients.vitaminA, this.vitaminA / 900e-6);
+        map.put(nutrients.vitaminD, this.vitaminD / 250e-6);
+        map.put(nutrients.vitaminE, this.vitaminE / 15e-3);
+        map.put(nutrients.vitaminK, this.vitaminK / 120e-6);
+        map.put(nutrients.vitaminB6, this.vitaminB6 / 1.3e-6);
+        map.put(nutrients.vitaminB12, this.vitaminB12 / 2.4e-6);
+        map.put(nutrients.vitaminC, this.vitaminC / 90e-3);
+        map.put(nutrients.mineralK, this.mineralK / 4.7);
+        map.put(nutrients.mineralCa, (double)this.mineralCa);
+        map.put(nutrients.mineralP, this.mineralP / 0.7);
+        map.put(nutrients.mineralMg, this.mineralMg / 0.4);
+        map.put(nutrients.mineralCu, this.mineralCu / 0.9e-3);
+        map.put(nutrients.mineralFe, this.mineralFe / 8e-3);
+        map.put(nutrients.mineralSe, this.mineralSe / 55e-6);
         return map;
     }
 
@@ -224,9 +250,9 @@ public class NutrientStore {
     }
 
     public ArrayList<nutrients> deficient(double n){
-        List<Map.Entry<nutrients, Double>> map = this.getNutrientPercentage();
+        Map<nutrients, Double> map = this.getNutrientPercentage();
         ArrayList<nutrients> list = new ArrayList<>();
-        for (Map.Entry<nutrients, Double> i : map){
+        for (Map.Entry<nutrients, Double> i : map.entrySet()){
             if (i.getValue() <= n) list.add(i.getKey());
         }
         return list;

@@ -12,41 +12,38 @@ import java.util.*;
 @SuppressWarnings("unused")
 @Config(name = "vladsfoodmod")
 @Config.Gui.Background("minecraft:textures/block/dirt.png")
-@Config.Gui.CategoryBackground(category = "b", background = "minecraft:textures/block/stone.png")
+@Config.Gui.CategoryBackground(category = "data", background = "minecraft:textures/block/bedrock.png")
 public class ModConfig extends PartitioningSerializer.GlobalData {
-    @ConfigEntry.Category("a")
+    @ConfigEntry.Category("features")
     @ConfigEntry.Gui.TransitiveObject
-    public ModuleA moduleA = new ModuleA();
+    public Features features = new Features();
 
+    @ConfigEntry.Category("data")
+    public FoodData foodData = new FoodData();
 
-    @ConfigEntry.Category("b")
-    @ConfigEntry.Gui.TransitiveObject
-    public ModuleB moduleB = new ModuleB();
-
-    enum ExampleEnum {
-        FOO, BAR, BAZ
-    }
-
-    @Config(name = "Features toggler")
-    public static class ModuleA implements ConfigData {
+    @Config(name = "Features toggle")
+    public static class Features implements ConfigData {
 
         @Comment("change this if you are using spice of fabric or alike (disables food bar behavior changes)")
         public boolean disable_food_system = false;
 
-        @ConfigEntry.Gui.PrefixText
+        @Comment("disables tracking essential nutrients")
+        public boolean disable_nutrient_system = false;
+
         public boolean delay_system = false;
 
         @Comment("Choose the subtraction schedule you want to use")
         public boolean subtract_each_24h = true;
-
         public boolean subtract_on_wakeup = false;
 
-        @ConfigEntry.Gui.PrefixText
+
         public boolean water_branding = false;
+
+        public float generic_nutrient_data_multiplier_on_create_database = 10;
     }
 
     @Config(name = "foods")
-    public static class ModuleB implements ConfigData {
+    public static class FoodData implements ConfigData {
 
         @Comment("one and only food database for this mod (in grams) [delete this file to reset]")
         public Map<String, NutrientStore> nutrientStoreMap = new HashMap<String, NutrientStore>() {{
@@ -71,16 +68,16 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
             put(Items.COOKIE.getTranslationKey(), new NutrientStore(0.1f,73.4f,3.9f,16.8f,5.1f,1e-6f,0e-6f,1.06e-3f,4e-6f,0.018e-3f,0e-6f,0e-3f,199e-3f,46e-3f,109e-3f,21e-3f,0.218e-3f,3.5e-3f,2.6e-6f));
             put(Items.DRIED_KELP.getTranslationKey(), new NutrientStore(1f,52.39f,31.84f,4.01f,6.68f,14e-6f,0e-6f,5e-3f,25e-6f,0.334e-3f,0e-6f,5e-3f,1244e-3f,372e-3f,85e-3f,482e-3f,3.355e-3f,24.95e-3f,7.3e-6f));
             put(Items.GOLDEN_APPLE.getTranslationKey(), new NutrientStore(1f,29.61f,1.34f,2.15f,66.3f,5e-6f,0e-6f,0.25e-3f,2.1e-6f,0.045e-3f,0.08e-6f,3.6e-3f,134e-3f,39e-3f,37e-3f,8e-3f,0.025e-3f,0.12e-3f,0.4e-6f));
-            put(Items.ENCHANTED_GOLDEN_APPLE.getTranslationKey(), new NutrientStore());
-            put(Items.GOLDEN_CARROT.getTranslationKey(), new NutrientStore());
+            put(Items.ENCHANTED_GOLDEN_APPLE.getTranslationKey(), this.get(Items.GOLDEN_APPLE.getTranslationKey()));
+            put(Items.GOLDEN_CARROT.getTranslationKey(), this.get(Items.CARROT.getTranslationKey()));
             put(Items.HONEY_BOTTLE.getTranslationKey(), new NutrientStore(1f,82.4f,0.3f,0f,17.1f,0e-6f,0e-6f,0e-3f,0e-6f,0.024e-3f,0e-6f,0.5e-3f,52e-3f,6e-3f,4e-3f,2e-3f,0.036e-3f,0.42e-3f,0.8e-6f));
             put(Items.MELON_SLICE.getTranslationKey(), new NutrientStore(0.5f,7.55f,0.61f,0.15f,91.45f,28e-6f,0e-6f,0.05e-3f,0.1e-6f,0.045e-3f,0e-6f,8.1e-3f,112e-3f,7e-3f,11e-3f,10e-3f,0.042e-3f,0.24e-3f,0.4e-6f));
             put(Items.MILK_BUCKET.getTranslationKey(), new NutrientStore(10f,4.67f,3.28f,3.2f,88.1f,32e-6f,1.1e-6f,0.05e-3f,0.3e-6f,0.061e-3f,0.54e-6f,0e-3f,150e-3f,123e-3f,101e-3f,12e-3f,0.001e-3f,0e-3f,1.9e-6f));
             put(Items.MUSHROOM_STEW.getTranslationKey(), new NutrientStore(2f,3.33f,0.66f,2.59f,92.46f,1e-6f,0.1e-6f,0.24e-3f,9.6e-6f,0.007e-3f,0e-6f,0e-3f,31e-3f,7e-3f,12e-3f,2e-3f,0.016e-3f,0.09e-3f,1.4e-6f));
             put(Items.MUTTON.getTranslationKey(), new NutrientStore(1f,0f,16.56f,23.41f,59.47f,0e-6f,0.1e-6f,0.2e-3f,3.6e-6f,0.13e-3f,2.31e-6f,0e-3f,222e-3f,16e-3f,157e-3f,21e-3f,0.101e-3f,1.55e-3f,18.8e-6f));
-            put(Items.POISONOUS_POTATO.getTranslationKey(), new NutrientStore());
             put(Items.PORKCHOP.getTranslationKey(), new NutrientStore(1f,0f,16.88f,21.19f,61.06f,2e-6f,0e-6f,0e-3f,0e-6f,0.383e-3f,0.7e-6f,0.7e-3f,187e-3f,14e-3f,175e-3f,19e-3f,0.045e-3f,0.88e-3f,24.6e-6f));
             put(Items.POTATO.getTranslationKey(), new NutrientStore(1f,17.49f,2.05f,0.09f,79.25f,0e-6f,0e-6f,0.01e-3f,2e-6f,0.298e-3f,0e-6f,19.7e-3f,425e-3f,12e-3f,57e-3f,23e-3f,0.11e-3f,0.81e-3f,0.4e-6f));
+                put(Items.POISONOUS_POTATO.getTranslationKey(), this.get(Items.POTATO.getTranslationKey()));
             put(Items.PUFFERFISH.getTranslationKey(), new NutrientStore());
             put(Items.PUMPKIN_PIE.getTranslationKey(), new NutrientStore(3f,34.83f,3.9f,9.75f,50.39f,448e-6f,0.1e-6f,0.76e-3f,13.2e-6f,0.063e-3f,0.35e-6f,0e-3f,167e-3f,64e-3f,81e-3f,14e-3f,0.148e-3f,0.9e-3f,5.4e-6f));
             put(Items.RABBIT.getTranslationKey(), new NutrientStore(1f,0f,21.79f,2.32f,74.51f, 0e-6f,0e-6f,0e-3f,0e-6f,0e-3f,0e-6f,0e-3f,378e-3f,12e-3f,226e-3f,29e-3f,0e-3f,3.2e-3f,9.4e-6f));
@@ -91,7 +88,10 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
             put(Items.SUSPICIOUS_STEW.getTranslationKey(), this.get(Items.MUSHROOM_STEW.getTranslationKey()));
             put(Items.SWEET_BERRIES.getTranslationKey(), new NutrientStore(1f,11.97f,0.46f,0.13f,87.32f,3e-6f,0e-6f,1.32e-3f,5e-6f,0.057e-3f,0e-6f,14e-3f,80e-3f,8e-3f,11e-3f,6e-3f,0.056e-3f,0.23e-3f,0.1e-6f));
             put(Items.TROPICAL_FISH.getTranslationKey(), new NutrientStore());
-            //put(Items.POTION.getTranslationKey(), new NutrientStore());
+            put(Items.POTION.getTranslationKey(), new NutrientStore((NutrientStore store) -> store.water = 100));
         }};
+
+        @Comment("report if false after you ate something")
+        public boolean exists = false;
     }
 }

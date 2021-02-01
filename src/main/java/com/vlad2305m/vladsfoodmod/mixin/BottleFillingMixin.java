@@ -20,7 +20,7 @@ public class BottleFillingMixin {
             target = "net/minecraft/item/GlassBottleItem.fill (Lnet/minecraft/item/ItemStack;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/ItemStack;)Lnet/minecraft/item/ItemStack;"),
             index = 2)
     private ItemStack RSetPotion(ItemStack itemStack, PlayerEntity player, ItemStack bottledWater){
-        if (!player.world.isClient && AutoConfig.getConfigHolder(ModConfig.class).getConfig().moduleA.water_branding) {
+        if (!player.world.isClient && AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.water_branding) {
             int i = player.world.random.nextInt(158);
             bottledWater.getOrCreateSubTag("display")
                     .putString("Name", "{\"text\":\"" + WaterBrands.brands[i] + "\",\"italic\":false}");
