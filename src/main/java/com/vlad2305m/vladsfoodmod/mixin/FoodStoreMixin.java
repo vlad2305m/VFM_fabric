@@ -62,7 +62,7 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
     public void add(int foodLevelIn, float foodSaturationModifier, CallbackInfo info) {
         if(!AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.disable_food_system){
         if(AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.delay_system){
-            this.vfm_mouth += foodLevelIn;
+            this.vfm_mouth += foodLevelIn; //TODO check if turning this off works
             this.vfm_mouth += foodSaturationModifier * foodLevelIn * 2.0F;
             this.foodLevel = Math.min((int) this.vfm_stomach, 20);
             this.foodSaturationLevel = Math.max(Math.min((int) this.vfm_blood - 20, 20), 0);
@@ -84,29 +84,29 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
 
     @Inject(method = "update", at = @At("HEAD"), cancellable = true)
     public void update(PlayerEntity player, CallbackInfo info) {
-
+//TODO get rid of gametime link in favor of ++timer
         this.vfm_gametime = player.world.getTime();
+        ModConfig.Features features = AutoConfig.getConfigHolder(ModConfig.class).getConfig().features;
 
-        if (!AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.disable_nutrient_system){
+        if (!features.disable_nutrient_system){
             if (!AutoConfig.getConfigHolder(ModConfig.class).getConfig().foodData.disable_muliplier) {
-                double m = AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.generic_nutrient_data_multiplier;
+                double m = features.generic_nutrient_data_multiplier;
                 AutoConfig.getConfigHolder(ModConfig.class).getConfig().foodData.nutrientStoreMap.forEach((String s, NutrientStore n)->n.multiply(m));
                 AutoConfig.getConfigHolder(ModConfig.class).getConfig().foodData.disable_muliplier = true;
             } // apply multiplier once
-            if (AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.subtract_each_24h
-                    && this.vfm_gametime - this.vfm_nutrient_timer  > 24000) {
+            if (features.subtract_each_24h && this.vfm_gametime - this.vfm_nutrient_timer  > 24000) {
                 this.vfm_essential_nutrients.subtractDaily(1);
                 this.vfm_nutrient_timer += 24000;
                 if (this.vfm_post_read) {this.vfm_nutrient_timer = this.vfm_gametime - this.vfm_nutrient_timer;}
             }
             if (this.exhaustion > 4.0F) {
-                if (vfm_essential_nutrients.isSuffering(0)) player.dealDamage(player, player);
-                if (vfm_essential_nutrients.isSuffering(-5)) player.kill();
+                if (features.nutrient_damage_penalty && vfm_essential_nutrients.isSuffering(0)) player.dealDamage(player, player);
+                if (features.nutrient_death_penalty && vfm_essential_nutrients.isSuffering(-5)) player.kill();//damage(new DamageSource(vfm_essential_nutrients.deficient(-5).toString()),3.4028235E38F);
             }
         }
-
-        if (!AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.disable_food_system) {
-            boolean vfm_delay_enabled = AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.delay_system;
+//TODO move organs to another class; add debugging /commands
+        if (!features.disable_food_system) {
+            boolean vfm_delay_enabled = features.delay_system;
             if (this.vfm_post_read) {
                 this.vfm_stomach_timer = this.vfm_gametime - this.vfm_stomach_timer;
                 this.vfm_last_meal = this.vfm_gametime - this.vfm_last_meal;
@@ -243,7 +243,7 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
             if (this.foodLevel < 7 && this.vfm_blood > 10.0F) {
                 this.foodLevel = 10;
                 this.foodSaturationLevel = 0;
-            } // TODO eating speed hooks & potions
+            } // TODO eating speed hooks
             else if (this.vfm_blood <= 10.0F && player.isSprinting()) {
                 player.addStatusEffect(new StatusEffectInstance(
                         StatusEffects.SLOWNESS, 20, this.vfm_blood > 5 ? 1 : 2, true, false, false));

@@ -36,6 +36,8 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
         public boolean subtract_each_24h = true;
         public boolean subtract_on_wakeup = false;
 
+        public boolean nutrient_damage_penalty = true;
+        public boolean nutrient_death_penalty = true;
 
         public boolean water_branding = false;
 
