@@ -4,6 +4,7 @@ import com.vlad2305m.vladsfoodmod.ModConfig;
 import com.vlad2305m.vladsfoodmod.NutrientStore;
 import com.vlad2305m.vladsfoodmod.interfaces.VfmFoodStore;
 import com.vlad2305m.vladsfoodmod.misc.Pair;
+import com.vlad2305m.vladsfoodmod.misc.Util;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -12,8 +13,6 @@ import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.PotionItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.packet.s2c.play.HealthUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -59,15 +58,16 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
 
     @Inject(method = "add", at = @At("HEAD"), cancellable = true)
     public void add(int foodLevelIn, float foodSaturationModifier, CallbackInfo info) {
-        if(!AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.disable_food_system){
-        if(AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.delay_system){
-            this.vfm_mouth += foodLevelIn; //TODO check if turning this off works
-            this.vfm_mouth += foodSaturationModifier * foodLevelIn * 2.0F;
-            this.foodLevel = Math.min((int) this.vfm_stomach, 20);
-            this.foodSaturationLevel = Math.max(Math.min((int) this.vfm_blood - 20, 20), 0);
-        } else {
-            this.vfm_blood += foodLevelIn + foodSaturationModifier * foodLevelIn * 2.0F;
-        }
+        if(!AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.disable_food_system) {
+            if (AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.delay_system) {
+                this.vfm_mouth += foodLevelIn;
+                this.vfm_mouth += foodSaturationModifier * foodLevelIn * 2.0F;
+                this.foodLevel = Math.min((int) this.vfm_stomach, 20);
+                this.foodSaturationLevel = Math.max(Math.min((int) this.vfm_blood - 20, 20), 0);
+            } else {
+                this.vfm_blood += foodLevelIn + foodSaturationModifier * foodLevelIn * 2.0F;
+            }
+
             this.vfm_send_packet = true;
             info.cancel();
         }
@@ -76,9 +76,7 @@ public abstract class FoodStoreMixin implements VfmFoodStore {
     @Inject(method = "eat", at = @At("HEAD"))
     public void eat(Item item, ItemStack stack, CallbackInfo info) {
         this.vfm_mouth_item = stack;
-        NutrientStore stackValue = AutoConfig.getConfigHolder(ModConfig.class).getConfig().foodData.nutrientStoreMap.get(item.getTranslationKey());
-        if (stackValue == null && item instanceof PotionItem) stackValue = AutoConfig.getConfigHolder(ModConfig.class).getConfig().foodData.nutrientStoreMap.get(Items.POTION.getTranslationKey());
-        if (stackValue != null) this.vfm_essential_nutrients.add(stackValue);
+        this.vfm_essential_nutrients.add(Util.getNutrientContents(item));
     }
 
     @Inject(method = "update", at = @At("HEAD"), cancellable = true)
