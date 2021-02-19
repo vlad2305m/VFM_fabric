@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "BottleFillingMixin",
+    "CakeEatingMixin",
     "FilledBottleMixin",
     "FoodStoreMixin",
     "WakeUpMixin"

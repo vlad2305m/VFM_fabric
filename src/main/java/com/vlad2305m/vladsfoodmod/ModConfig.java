@@ -12,12 +12,12 @@ import java.util.*;
 @SuppressWarnings("unused")
 @Config(name = "vladsfoodmod")
 @Config.Gui.Background("minecraft:textures/block/dirt.png")
-@Config.Gui.CategoryBackground(category = "data", background = "minecraft:textures/block/bedrock.png")
 public class ModConfig extends PartitioningSerializer.GlobalData {
     @ConfigEntry.Category("features")
     @ConfigEntry.Gui.TransitiveObject
     public Features features = new Features();
 
+    @ConfigEntry.Gui.Excluded
     @ConfigEntry.Category("data")
     public FoodData foodData = new FoodData();
 
@@ -55,7 +55,7 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
             put(Items.BEETROOT.getTranslationKey(), new NutrientStore(1f,9.56f,1.61f,0.17f,87.58f,2e-6f,0e-6f,0.04e-3f,0.2e-6f,0.067e-3f,0e-6f,4.9e-3f,325e-3f,16e-3f,40e-3f,23e-3f,0.075e-3f,0.8e-3f,0.7e-6f));
             put(Items.BEETROOT_SOUP.getTranslationKey(), new NutrientStore(6f,9.56f,1.61f,0.17f,87.58f,2e-6f,0e-6f,0.04e-3f,0.2e-6f,0.067e-3f,0e-6f,4.9e-3f,325e-3f,16e-3f,40e-3f,23e-3f,0.075e-3f,0.8e-3f,0.7e-6f));
             put(Items.BREAD.getTranslationKey(), new NutrientStore(1f,49.2f,9.43f,3.59f,35.7f,0e-6f,0e-6f,0.22e-3f,0.2e-6f,0.092e-3f,0e-6f,0e-3f,117e-3f,211e-3f,113e-3f,27e-3f,0.124e-3f,3.36e-3f,23.2e-6f));
-            //put(Items.CAKE.getTranslationKey(), new NutrientStore());
+            put(Items.CAKE.getTranslationKey(), new NutrientStore());
             put(Items.CARROT.getTranslationKey(), new NutrientStore(1f,9.58f,0.93f,0.24f,88.29f,835e-6f,0e-6f,0.66e-3f,13.2e-6f,0.138e-3f,0e-6f,5.9e-3f,320e-3f,33e-3f,35e-3f,12e-3f,0.045e-3f,0.3e-3f,0.1e-6f));
             put(Items.CHICKEN.getTranslationKey(), new NutrientStore(1f,0f,21.39f,3.08f,75.46f,16e-6f,0.1e-6f,0.21e-3f,1.8e-6f,0.43e-3f,0.37e-6f,2.3e-3f,229e-3f,12e-3f,173e-3f,25e-3f,0.053e-3f,0.89e-3f,15.7e-6f));
             put(Items.CHORUS_FRUIT.getTranslationKey(), new NutrientStore());
