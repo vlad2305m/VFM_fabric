@@ -1,0 +1,13 @@
+{
+  "text.autoconfig.vladsfoodmod.category.features": "Features",
+
+  "text.autoconfig.vladsfoodmod.option.features.disable_food_system": "Disable changes to food bar",
+  "text.autoconfig.vladsfoodmod.option.features.disable_nutrient_system": "Disable nutrients",
+  "text.autoconfig.vladsfoodmod.option.features.delay_system": "Delay between eating something and gaining food bars",
+  "text.autoconfig.vladsfoodmod.option.features.subtract_each_24h": "Subtract nutrients each 24000 ticks of gameplay",
+  "text.autoconfig.vladsfoodmod.option.features.subtract_on_wakeup": "Subtract daily nutrients after waking up",
+  "text.autoconfig.vladsfoodmod.option.features.nutrient_damage_penalty": "Damage if spending hunger without nutrients",
+  "text.autoconfig.vladsfoodmod.option.features.nutrient_death_penalty": "Kill if too long without nutrients",
+  "text.autoconfig.vladsfoodmod.option.features.water_branding": "Name water bottles",
+  "text.autoconfig.vladsfoodmod.option.features.generic_nutrient_data_multiplier": "Multiply all nutrients gained from food by"
+}

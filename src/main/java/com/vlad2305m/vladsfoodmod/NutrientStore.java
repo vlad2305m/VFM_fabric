@@ -165,7 +165,7 @@ public class NutrientStore {
         this.mineralSe += nutrientStore.mineralSe;
     }
 
-    public NutrientStore multiply(double n) {
+    public void multiply(double n) {
         this.carbohydrates *= n;
         this.protein *= n;
         this.fat *= n;
@@ -184,7 +184,6 @@ public class NutrientStore {
         this.mineralCu *= n;
         this.mineralFe *= n;
         this.mineralSe *= n;
-        return this;
     }
 
     public NutrientStore subtractDaily(float f) {
