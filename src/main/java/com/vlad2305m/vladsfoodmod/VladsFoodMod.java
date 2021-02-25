@@ -1,6 +1,8 @@
 package com.vlad2305m.vladsfoodmod;
 
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.vlad2305m.vladsfoodmod.interfaces.ShowNutrientInfo;
+import com.vlad2305m.vladsfoodmod.interfaces.VfmFoodStore;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.ConfigHolder;
 import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
@@ -8,7 +10,6 @@ import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.registry.CommandRegistry;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 
@@ -31,6 +32,8 @@ public class VladsFoodMod implements ModInitializer, ClientModInitializer {
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
 			dispatcher.register(CommandManager.literal("vfmstats").executes((commandContext) -> ((ShowNutrientInfo)((ServerCommandSource)commandContext.getSource()).getPlayer()).showNutrientInfo()));
+			dispatcher.register(CommandManager.literal("vfmsubtractdaily").then(CommandManager.argument("multiplier", IntegerArgumentType.integer()).executes((commandContext) -> ((VfmFoodStore)((ServerCommandSource)commandContext.getSource()).getPlayer().getHungerManager()).getNutrientStore().subtractDaily(commandContext.getArgument("multiplier", Integer.class)) == null ? 0 : 1)));
+
 		});
 
 	}
