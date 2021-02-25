@@ -1,11 +1,16 @@
 package com.vlad2305m.vladsfoodmod;
 
+import com.vlad2305m.vladsfoodmod.interfaces.ShowNutrientInfo;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.ConfigHolder;
 import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
 import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.registry.CommandRegistry;
+import net.minecraft.server.command.CommandManager;
+import net.minecraft.server.command.ServerCommandSource;
 
 @SuppressWarnings("unused")
 public class VladsFoodMod implements ModInitializer, ClientModInitializer {
@@ -24,8 +29,10 @@ public class VladsFoodMod implements ModInitializer, ClientModInitializer {
 		// or
 		//AutoConfig.getConfigHolder(ModConfig.class).getConfig();
 
+		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
+			dispatcher.register(CommandManager.literal("vfmstats").executes((commandContext) -> ((ShowNutrientInfo)((ServerCommandSource)commandContext.getSource()).getPlayer()).showNutrientInfo()));
+		});
 
-		System.out.println("Hello VFM world!");
 	}
 
 	@Override

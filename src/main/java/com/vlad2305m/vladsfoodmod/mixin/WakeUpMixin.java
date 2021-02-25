@@ -3,6 +3,7 @@ package com.vlad2305m.vladsfoodmod.mixin;
 import com.mojang.authlib.GameProfile;
 import com.vlad2305m.vladsfoodmod.ModConfig;
 import com.vlad2305m.vladsfoodmod.NutrientStore;
+import com.vlad2305m.vladsfoodmod.interfaces.ShowNutrientInfo;
 import com.vlad2305m.vladsfoodmod.interfaces.VfmFoodStore;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,7 +23,7 @@ import java.util.*;
 import static java.lang.Math.*;
 
 @Mixin(ServerPlayerEntity.class)
-public abstract class WakeUpMixin extends PlayerEntity {
+public abstract class WakeUpMixin extends PlayerEntity implements ShowNutrientInfo {
 
     public WakeUpMixin(World world, BlockPos pos, float yaw, GameProfile profile) {
         super(world, pos, yaw, profile);
@@ -32,14 +33,15 @@ public abstract class WakeUpMixin extends PlayerEntity {
 
     @Inject(method = "wakeUp(ZZ)V", at = @At("HEAD"))
     private void wakeUp(boolean bl, boolean updateSleepingPlayers, CallbackInfo ci){
+
+        if (AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.subtract_on_wakeup)
+            ((VfmFoodStore)this.getHungerManager()).getNutrientStore().subtractDaily(1);
+
         showNutrientInfo();
     }
 
-    public void showNutrientInfo(){
+    public int showNutrientInfo(){
         if (!this.world.isClient && !AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.disable_nutrient_system){
-
-            if (AutoConfig.getConfigHolder(ModConfig.class).getConfig().features.subtract_on_wakeup)
-                ((VfmFoodStore)this.getHungerManager()).getNutrientStore().subtractDaily(1);
 
             Map<NutrientStore.nutrients, Double> map =
                     ((VfmFoodStore)hungerManager).getNutrientStore().getNutrientPercentage();
@@ -78,6 +80,7 @@ public abstract class WakeUpMixin extends PlayerEntity {
                             find_5_best(def.getKey()): "")
                     ), false);
         }
+        return 1;
     }
 
     private String find_5_best(NutrientStore.nutrients n) {
@@ -87,10 +90,11 @@ public abstract class WakeUpMixin extends PlayerEntity {
 
         int i = 0;
         for (Map.Entry<String, NutrientStore> m : list.entrySet()) {
-            if (i < 4){ best.add(new AbstractMap.SimpleImmutableEntry<>(m.getKey(), m.getValue().getNutrientPercentage().get(n))); i++; continue;}
-            best.set(5, new AbstractMap.SimpleImmutableEntry<>(m.getKey(), m.getValue().getNutrientPercentage().get(n)));
+            if (i <= 5){ best.add(new AbstractMap.SimpleImmutableEntry<>(m.getKey(), m.getValue().getNutrientPercentage().get(n))); i++; continue;}
             best.sort(Map.Entry.comparingByValue());
+            best.set(5, new AbstractMap.SimpleImmutableEntry<>(m.getKey(), m.getValue().getNutrientPercentage().get(n)));
         }
+        best.sort(Map.Entry.comparingByValue());
 
         return best.get(0).getKey() + ", " + best.get(1).getKey() + ", " + best.get(2).getKey() + ", " + best.get(3).getKey() + ", " + best.get(4).getKey() + ".";
 
