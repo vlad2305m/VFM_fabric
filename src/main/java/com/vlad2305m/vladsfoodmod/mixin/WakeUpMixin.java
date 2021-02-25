@@ -50,7 +50,7 @@ public abstract class WakeUpMixin extends PlayerEntity implements ShowNutrientIn
 
             StringBuilder levels = new StringBuilder();
             for (Map.Entry<NutrientStore.nutrients, Double> i : map.entrySet()) {
-                int n = (int)floor(i.getValue() * 5);
+                int n = (int) round(i.getValue() * 5);
                 boolean neg = false;
                 if (n < 80) { def = def.getValue() > i.getValue() ? i : def; }
                 if (n < 0) { n = -n * 4; neg = true; }
@@ -58,13 +58,14 @@ public abstract class WakeUpMixin extends PlayerEntity implements ShowNutrientIn
                 levels
                         .append(i.getKey())
                         .append(":§8")
+                        .append(i.getKey().toString().toCharArray()[0] == 'v' ? "`" : "")
                         .append(StringUtils.repeat("_", 11 - i.getKey().toString().length()))
                         .append("§f§l[")
                         .append(neg ? "§c" : "§a")
                         .append(StringUtils.repeat("|", n))
                         .append("§7")
                         .append(StringUtils.repeat("|", 100 - n))
-                        .append("§f]§r\n");
+                        .append("§f§l]§r\n");
             }
 
 
@@ -92,14 +93,17 @@ public abstract class WakeUpMixin extends PlayerEntity implements ShowNutrientIn
         for (Map.Entry<String, NutrientStore> m : list.entrySet()) {
             if (i <= 5){ best.add(new AbstractMap.SimpleImmutableEntry<>(m.getKey(), m.getValue().getNutrientPercentage().get(n))); i++; continue;}
             best.sort(Map.Entry.comparingByValue());
-            best.set(5, new AbstractMap.SimpleImmutableEntry<>(m.getKey(), m.getValue().getNutrientPercentage().get(n)));
+            best.set(0, new AbstractMap.SimpleImmutableEntry<>(m.getKey(), m.getValue().getNutrientPercentage().get(n)));
         }
         best.sort(Map.Entry.comparingByValue());
 
-        return best.get(0).getKey() + ", " + best.get(1).getKey() + ", " + best.get(2).getKey() + ", " + best.get(3).getKey() + ", " + best.get(4).getKey() + ".";
+        return to_best(best.get(5)) + ", " + to_best(best.get(4)) + ", " + to_best(best.get(3)) + ", " + to_best(best.get(2)) + ", " + to_best(best.get(1)) + ".";
+
 
     }
 
-
+    private String to_best(Map.Entry<String, Double> e){
+        return e.getKey() + " (§a" + StringUtils.repeat("|", (int)(e.getValue()*5)) + StringUtils.repeat(".", (int) round((e.getValue()*5 - (int)(e.getValue()*5))*4)) + "§r)";
+    }
 
 }
