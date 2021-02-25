@@ -8,6 +8,7 @@
     "CakeEatingMixin",
     "FilledBottleMixin",
     "FoodStoreMixin",
+    "MilkDrinkingMixin",
     "WakeUpMixin"
   ],
   "client": [
