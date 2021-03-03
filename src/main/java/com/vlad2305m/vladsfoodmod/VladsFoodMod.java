@@ -12,6 +12,13 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.Text;
+
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import static com.vlad2305m.vladsfoodmod.misc.Util.find_5_best;
 
 @SuppressWarnings("unused")
 public class VladsFoodMod implements ModInitializer, ClientModInitializer {
@@ -31,8 +38,28 @@ public class VladsFoodMod implements ModInitializer, ClientModInitializer {
 		//AutoConfig.getConfigHolder(ModConfig.class).getConfig();
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
-			dispatcher.register(CommandManager.literal("vfmstats").executes((commandContext) -> ((ShowNutrientInfo)((ServerCommandSource)commandContext.getSource()).getPlayer()).showNutrientInfo()));
-			dispatcher.register(CommandManager.literal("vfmsubtractdaily").then(CommandManager.argument("multiplier", IntegerArgumentType.integer()).executes((commandContext) -> ((VfmFoodStore)((ServerCommandSource)commandContext.getSource()).getPlayer().getHungerManager()).getNutrientStore().subtractDaily(commandContext.getArgument("multiplier", Integer.class)) == null ? 0 : 1)));
+			dispatcher.register(CommandManager
+					.literal("vfmstats")
+					.executes((commandContext) -> ((ShowNutrientInfo) commandContext.getSource().getPlayer()).showNutrientInfo()));
+			dispatcher.register(CommandManager
+					.literal("vfmsubtractdaily").then(CommandManager
+					.argument("multiplier", IntegerArgumentType.integer())
+					.executes((commandContext) -> {
+						((VfmFoodStore) commandContext.getSource().getPlayer().getHungerManager()).getNutrientStore().subtractDaily(commandContext.getArgument("multiplier", Integer.class));
+						commandContext.getSource().getPlayer().sendMessage(Text.of("Success"), true);
+						return 1;
+					})));
+			dispatcher.register(CommandManager
+					.literal("vfmget5best").then(CommandManager
+					.argument("nutrient", IntegerArgumentType.integer(1))
+					.executes((commandContext) -> {
+						Set<Map.Entry<NutrientStore.nutrients, Double>> entrySet = ((VfmFoodStore) commandContext.getSource().getPlayer().getHungerManager()).getNutrientStore().getNutrientPercentage().entrySet();
+						Iterator<Map.Entry<NutrientStore.nutrients, Double>> iterator = entrySet.iterator();
+						for (int i = commandContext.getArgument("nutrient", Integer.class); i > 1; i--) iterator.next();
+						NutrientStore.nutrients nutrient = iterator.next().getKey();
+						commandContext.getSource().getPlayer().sendMessage(Text.of("Top 5 sources of " + nutrient.toString() + ": " + find_5_best(nutrient)), false);
+						return 1;
+					})));
 
 		});
 

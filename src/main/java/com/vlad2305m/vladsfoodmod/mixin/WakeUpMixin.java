@@ -20,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.*;
 
+import static com.vlad2305m.vladsfoodmod.misc.Util.find_5_best;
 import static java.lang.Math.*;
 
 @Mixin(ServerPlayerEntity.class)
@@ -69,7 +70,6 @@ public abstract class WakeUpMixin extends PlayerEntity implements ShowNutrientIn
             }
 
 
-
             sendMessage(Text.of(
                     "Your essential nutrient levels:\n" +
                             levels.toString() +
@@ -81,29 +81,8 @@ public abstract class WakeUpMixin extends PlayerEntity implements ShowNutrientIn
                             find_5_best(def.getKey()): "")
                     ), false);
         }
+
         return 1;
-    }
-
-    private String find_5_best(NutrientStore.nutrients n) {
-        List<Map.Entry<String, Double>> best = new LinkedList<>();
-
-        Map<String, NutrientStore> list = AutoConfig.getConfigHolder(ModConfig.class).getConfig().foodData.nutrientStoreMap;
-
-        int i = 0;
-        for (Map.Entry<String, NutrientStore> m : list.entrySet()) {
-            if (i <= 5){ best.add(new AbstractMap.SimpleImmutableEntry<>(m.getKey(), m.getValue().getNutrientPercentage().get(n))); i++; continue;}
-            best.sort(Map.Entry.comparingByValue());
-            best.set(0, new AbstractMap.SimpleImmutableEntry<>(m.getKey(), m.getValue().getNutrientPercentage().get(n)));
-        }
-        best.sort(Map.Entry.comparingByValue());
-
-        return to_best(best.get(5)) + ", " + to_best(best.get(4)) + ", " + to_best(best.get(3)) + ", " + to_best(best.get(2)) + ", " + to_best(best.get(1)) + ".";
-
-
-    }
-
-    private String to_best(Map.Entry<String, Double> e){
-        return e.getKey() + " (§a" + StringUtils.repeat("|", (int)(e.getValue()*5)) + StringUtils.repeat(".", (int) round((e.getValue()*5 - (int)(e.getValue()*5))*4)) + "§r)";
     }
 
 }

@@ -27,19 +27,19 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
         @Comment("change this if you are using spice of fabric or alike (disables food bar behavior changes)")
         public boolean disable_food_system = false;
 
+        public boolean delay_system = true;
+
         @Comment("disables tracking essential nutrients")
         public boolean disable_nutrient_system = false;
 
-        public boolean delay_system = false;
-
         @Comment("Choose the subtraction schedule you want to use")
-        public boolean subtract_each_24h = true;
-        public boolean subtract_on_wakeup = false;
+        public boolean subtract_each_24h = false;
+        public boolean subtract_on_wakeup = true;
 
         public boolean nutrient_damage_penalty = true;
         public boolean nutrient_death_penalty = true;
 
-        public boolean water_branding = false;
+        public boolean water_branding = true;
 
         public double generic_nutrient_data_multiplier = 10;
     }
@@ -84,7 +84,7 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
             put(Items.PUMPKIN_PIE.getTranslationKey(), new NutrientStore(3f,34.83f,3.9f,9.75f,50.39f,448e-6f,0.1e-6f,0.76e-3f,13.2e-6f,0.063e-3f,0.35e-6f,0e-3f,167e-3f,64e-3f,81e-3f,14e-3f,0.148e-3f,0.9e-3f,5.4e-6f));
             put(Items.RABBIT.getTranslationKey(), new NutrientStore(1f,0f,21.79f,2.32f,74.51f, 0e-6f,0e-6f,0e-3f,0e-6f,0e-3f,0e-6f,0e-3f,378e-3f,12e-3f,226e-3f,29e-3f,0e-3f,3.2e-3f,9.4e-6f));
             put(Items.RABBIT_STEW.getTranslationKey(), new NutrientStore(4f,4.44f,6.97f,1.81f,85.27f,50e-6f,0e-6f,0.15e-3f,4.3e-6f,0.121e-3f,1.35e-6f,2.4e-3f,162e-3f,14e-3f,64e-3f,10e-3f,0.079e-3f,0.71e-3f,9.1e-6f));
-            put(Items.ROTTEN_FLESH.getTranslationKey(), new NutrientStore().subtractDaily(-0.33f));// ;P
+            put(Items.ROTTEN_FLESH.getTranslationKey(), new NutrientStore().subtractDaily(-0.05f));// ;P
             put(Items.SALMON.getTranslationKey(), new NutrientStore(1f,0f,20.5f,4.4f,75.52f,35e-6f,10.9e-6f,0.4e-3f,0.4e-6f,0.611e-3f,4.15e-6f,0e-3f,366e-3f,7e-3f,216e-3f,27e-3f,0.063e-3f,0.38e-3f,31.4e-6f));
             put(Items.SPIDER_EYE.getTranslationKey(), new NutrientStore());
             put(Items.SUSPICIOUS_STEW.getTranslationKey(), this.get(Items.MUSHROOM_STEW.getTranslationKey()));
