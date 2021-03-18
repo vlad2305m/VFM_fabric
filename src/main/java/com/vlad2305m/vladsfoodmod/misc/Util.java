@@ -36,12 +36,12 @@ public class Util {
         }
         best.sort(Map.Entry.comparingByValue());
 
-        return to_best(best.get(5)) + ", " + to_best(best.get(4)) + ", " + to_best(best.get(3)) + ", " + to_best(best.get(2)) + ", " + to_best(best.get(1)) + ".";
+        return to_bar(best.get(5)) + ", " + to_bar(best.get(4)) + ", " + to_bar(best.get(3)) + ", " + to_bar(best.get(2)) + ", " + to_bar(best.get(1)) + ".";
 
 
     }
 
-    private static String to_best(Map.Entry<String, Double> e){
+    public static String to_bar(Map.Entry<String, Double> e){
         return e.getKey() + " (§a" + StringUtils.repeat("|", (int)(e.getValue()*5)) + StringUtils.repeat(".", (int) round((e.getValue()*5 - (int)(e.getValue()*5))*4)) + "§r)";
     }
 

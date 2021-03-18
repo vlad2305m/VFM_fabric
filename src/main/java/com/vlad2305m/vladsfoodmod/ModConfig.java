@@ -70,7 +70,7 @@ public class ModConfig extends PartitioningSerializer.GlobalData {
             put(Items.COOKIE.getTranslationKey(), new NutrientStore(0.1f,73.4f,3.9f,16.8f,5.1f,1e-6f,0e-6f,1.06e-3f,4e-6f,0.018e-3f,0e-6f,0e-3f,199e-3f,46e-3f,109e-3f,21e-3f,0.218e-3f,3.5e-3f,2.6e-6f));
             put(Items.DRIED_KELP.getTranslationKey(), new NutrientStore(1f,52.39f,31.84f,4.01f,6.68f,14e-6f,0e-6f,5e-3f,25e-6f,0.334e-3f,0e-6f,5e-3f,1244e-3f,372e-3f,85e-3f,482e-3f,3.355e-3f,24.95e-3f,7.3e-6f));
             put(Items.GOLDEN_APPLE.getTranslationKey(), new NutrientStore(1f,29.61f,1.34f,2.15f,66.3f,5e-6f,0e-6f,0.25e-3f,2.1e-6f,0.045e-3f,0.08e-6f,3.6e-3f,134e-3f,39e-3f,37e-3f,8e-3f,0.025e-3f,0.12e-3f,0.4e-6f));
-            put(Items.ENCHANTED_GOLDEN_APPLE.getTranslationKey(), this.get(Items.GOLDEN_APPLE.getTranslationKey()));
+                put(Items.ENCHANTED_GOLDEN_APPLE.getTranslationKey(), this.get(Items.GOLDEN_APPLE.getTranslationKey()));
             put(Items.GOLDEN_CARROT.getTranslationKey(), this.get(Items.CARROT.getTranslationKey()));
             put(Items.HONEY_BOTTLE.getTranslationKey(), new NutrientStore(1f,82.4f,0.3f,0f,17.1f,0e-6f,0e-6f,0e-3f,0e-6f,0.024e-3f,0e-6f,0.5e-3f,52e-3f,6e-3f,4e-3f,2e-3f,0.036e-3f,0.42e-3f,0.8e-6f));
             put(Items.MELON_SLICE.getTranslationKey(), new NutrientStore(0.5f,7.55f,0.61f,0.15f,91.45f,28e-6f,0e-6f,0.05e-3f,0.1e-6f,0.045e-3f,0e-6f,8.1e-3f,112e-3f,7e-3f,11e-3f,10e-3f,0.042e-3f,0.24e-3f,0.4e-6f));
