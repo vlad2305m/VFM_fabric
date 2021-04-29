@@ -8,10 +8,7 @@ import net.minecraft.item.Items;
 import net.minecraft.item.PotionItem;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.AbstractMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.lang.Math.round;
 
@@ -42,7 +39,7 @@ public class Util {
     }
 
     public static String to_bar(Map.Entry<String, Double> e){
-        return e.getKey() + " (§a" + StringUtils.repeat("|", (int)(e.getValue()*5)) + StringUtils.repeat(".", (int) round((e.getValue()*5 - (int)(e.getValue()*5))*4)) + "§r)";
+        return Arrays.stream(e.getKey().split(".",2)).skip(1).findFirst().orElse(e.getKey()) + " (§a" + StringUtils.repeat("|", (int)(e.getValue()*5)) + StringUtils.repeat(".", (int) round((e.getValue()*5 - (int)(e.getValue()*5))*4)) + "§r)";
     }
 
 }
